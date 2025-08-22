@@ -1,19 +1,54 @@
-/* 02-vars.css - The *nothing... Agency Design Tokens */
+/* 02-vars.css - The *nothing... Design Tokens */
 :root {
+  /* ── Palette (Light Mode) ──────────────────────── */
+  --clr-bg-light-mode: #ffffff;
+  --clr-text-light-mode: #0b0b0b;
+  --clr-muted-light-mode: #8b8b8b;
+  --clr-accent-light-mode: #101010;
+
   /* ── Palette (Dark Mode) ──────────────────────── */
-  --clr-bg:        #111111;
-  --clr-text:      #FFF8e7; /* Cosmic Latte */
-  --clr-accent:    #FF4500; /* OrangeRed */
-  --clr-muted:     #7E7E84;
+  --clr-bg-dark-mode: #111111;
+  --clr-text-dark-mode: #FFF8e7; /* Cosmic Latte */
+  --clr-muted-dark-mode: #9a9a9a;
+  --clr-accent-dark-mode: #FF4500; /* OrangeRed */
 
   /* ── Typography ───────────────────────────────── */
   --ff-primary:   'Helvetica Neue', Helvetica, sans-serif;
   --ff-mono:      'Menlo', 'Courier New', monospace;
+  --fs-base:      clamp(1rem, 0.9rem + 0.5vw, 1.25rem);
+  --fs-h1:        clamp(2.5rem, 5vw, 4.5rem);
+  --fs-h2:        clamp(2rem, 4vw, 3.5rem);
+  --fs-h3:        clamp(1.5rem, 3vw, 2.5rem);
 
   /* ── Spacing (Systematic) ─────────────────────── */
-  --space-1: 4px; --space-2: 8px; --space-3: 16px; --space-4: 24px;
-  --space-5: 32px; --space-6: 48px; --space-7: 64px; --space-8: 96px;
+  --space-1: clamp(4px, 0.5vw, 6px);
+  --space-2: clamp(8px, 1vw, 12px);
+  --space-3: clamp(16px, 2vw, 24px);
+  --space-4: clamp(24px, 3vw, 36px);
+  --space-5: clamp(32px, 4vw, 48px);
+  --space-6: clamp(48px, 6vw, 72px);
+  --space-7: clamp(64px, 8vw, 96px);
+  --space-8: clamp(96px, 12vw, 144px);
 
-  /* ── Animation ───────────────────────────────────── */
+  /* ── Layout ───────────────────────────────────── */
+  --radius: 1.25rem;
+  --gap: clamp(16px, 2vw, 28px);
+
+  /* ── Animation ────────────────────────────────── */
   --anim-duration: .6s;
+
+  /* ── Default to Dark Mode ────────────────────── */
+  --clr-bg: var(--clr-bg-dark-mode);
+  --clr-text: var(--clr-text-dark-mode);
+  --clr-muted: var(--clr-muted-dark-mode);
+  --clr-accent: var(--clr-accent-dark-mode);
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    --clr-bg: var(--clr-bg-light-mode);
+    --clr-text: var(--clr-text-light-mode);
+    --clr-muted: var(--clr-muted-light-mode);
+    --clr-accent: var(--clr-accent-light-mode);
+  }
 }

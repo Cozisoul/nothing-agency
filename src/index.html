@@ -2,27 +2,50 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <!-- SEO & Social Meta Tags -->
-    <title>*nothing... | A Transdisciplinary Office</title>
-    <meta name="description" content="*nothing... is a transdisciplinary office that merges systematic rigor with poetic inquiry to build world-class digital experiences, reduced to their essence.">
     
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://nothing-agency.com/"> <!-- Replace with your final URL -->
-    <meta property="og:title" content="*nothing... | A Transdisciplinary Office">
-    <meta property="og:description" content="Digital Experiences, Reduced to their Essence.">
-    <meta property="og:image" content="/assets/images/og-preview.png">
+    <!-- SEO & Social Meta Tags -->
+    <title>NOTHING — Creative Agency</title>
+    <meta name="description" content="A transdisciplinary studio crafting brand systems, web experiences, and campaign visuals.">
 
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://nothing-agency.com/"> <!-- Replace with your final URL -->
-    <meta property="twitter:title" content="*nothing... | A Transdisciplinary Office">
-    <meta property="twitter:description" content="Digital Experiences, Reduced to their Essence.">
-    <meta property="twitter:image" content="/assets/images/og-preview.png">
+    <!-- Canonical + Viewport + Theme -->
+    <link rel="canonical" href="https://nothing-agency.com/">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff">
+    <meta name="theme-color" media="(prefers-color-scheme: dark)"  content="#0b0b0b">
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.webmanifest">
+
+    <!-- Open Graph / X (Twitter) -->
+    <meta property="og:site_name" content="NOTHING">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://nothing-agency.com/">
+    <meta property="og:title" content="NOTHING — Creative Agency">
+    <meta property="og:description" content="Transdisciplinary studio crafting brand systems, web experiences, and campaigns.">
+    <meta property="og:image" content="https://nothing-agency.com/og/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="NOTHING — Creative Agency">
+    <meta name="twitter:description" content="Transdisciplinary studio crafting brand systems, web experiences, and campaigns.">
+    <meta name="twitter:image" content="https://nothing-agency.com/og/og-image.jpg">
 
     <link rel="stylesheet" href="/css/main.css">
+
+    <!-- Structured Data (JSON-LD) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": ["Organization","LocalBusiness"],
+      "name": "NOTHING",
+      "url": "https://nothing-agency.com/",
+      "logo": "https://nothing-agency.com/icons/logo.svg",
+      "sameAs": ["https://www.instagram.com/yourhandle","https://www.linkedin.com/company/yourhandle"],
+      "address": { "@type": "PostalAddress", "addressCountry": "ZA" },
+      "contactPoint": [{ "@type": "ContactPoint", "contactType": "business", "email": "hello@nothing-agency.com" }]
+    }
+    </script>
 </head>
 <body>
 
@@ -33,7 +56,7 @@
             <h1 class="logo">*nothing...<span id="cursor" class="cursor">_</span></h1>
         </div>
 
-        <div id="main-content" class="main-content is-hidden">
+        <div class="main-content is-hidden">
             <header class="site-header">
                 <div class="header-logo">*nothing...</div>
                 <div class="header-annotation">* A TRANSDISCIPLINARY OFFICE</div>
@@ -41,16 +64,16 @@
 
             <main id="main-content">
                 
-                <section id="manifesto" class="section">
-                    <h2 class="section-title">* MANIFESTO</h2>
+                <section id="manifesto" class="section" aria-labelledby="manifesto-title">
+                    <h2 id="manifesto-title" class="section-title">* MANIFESTO</h2>
                     <div class="manifesto-text">
                         <p>We are a transdisciplinary office. We merge systematic rigor with poetic inquiry.</p>
                         <p>We believe the most powerful digital experiences are reduced to their essence. We start with nothing—no preconceptions, no templates—and build from there. Our work is the argument.</p>
                     </div>
                 </section>
 
-                <section id="process" class="section">
-                    <h2 class="section-title">* PROCESS</h2>
+                <section id="process" class="section" aria-labelledby="process-title">
+                    <h2 id="process-title" class="section-title">* PROCESS</h2>
                     <div class="process-grid">
                         <div class="process-item">
                             <span class="process-number">01</span>
@@ -70,13 +93,13 @@
                     </div>
                 </section>
 
-                <section id="case-studies" class="section">
-                    <h2 class="section-title">* CASE STUDIES</h2>
+                <section id="case-studies" class="section" aria-labelledby="case-studies-title">
+                    <h2 id="case-studies-title" class="section-title">* CASE STUDIES</h2>
                     <div class="casestudies-grid">
                         <!-- Case Study 1: Research Radio -->
                         <div class="case-study-card">
                             <a href="[LINK_TO_RESEARCH_RADIO_WHEN_LIVE]" class="card-link" target="_blank" rel="noopener noreferrer">
-                                <img src="./assets/images/case-study-research-radio.jpg" alt="Screenshot of the Research Radio project website" class="card-image">
+                                <img src="./assets/images/case-study-research-radio.jpg" alt="Screenshot of the Research Radio project website" class="card-image" loading="lazy" decoding="async">
                                 <div class="card-body">
                                     <h3 class="card-title">Research Radio</h3>
                                     <p class="card-description">A digital journal and archive for a transdisciplinary practice.</p>
@@ -87,7 +110,7 @@
                         <!-- Case Study 2: TMM-OS -->
                         <div class="case-study-card">
                             <a href="[https://github.com/Cozisoul/tmm-os]" class="card-link" target="_blank" rel="noopener noreferrer">
-                                <img src="/assets/images/case-study-tmm-os.jpg" alt="A conceptual image representing the TMM-OS system" class="card-image">
+                                <img src="/assets/images/case-study-tmm-os.jpg" alt="A conceptual image representing the TMM-OS system" class="card-image" loading="lazy" decoding="async">
                                 <div class="card-body">
                                     <h3 class="card-title">TMM-OS</h3>
                                     <p class="card-description">A personal operating system for managing a creative practice.</p>
@@ -98,8 +121,8 @@
                     </div>
                 </section>
 
-                <section id="office" class="section">
-                    <h2 class="section-title">* THE OFFICE</h2>
+                <section id="office" class="section" aria-labelledby="office-title">
+                    <h2 id="office-title" class="section-title">* THE OFFICE</h2>
                     <div class="office-grid">
                         <div class="office-bio">
                             <p>Our practice is a partnership between a lead designer and a lead developer. We are a small, focused office, not a large, traditional agency. We collaborate with a curated network of specialists to execute our vision.</p>

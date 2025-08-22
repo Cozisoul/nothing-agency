@@ -1,4 +1,8 @@
 /* 03-base.css - The default styles for the canvas */
+html {
+  color-scheme: light dark;
+}
+
 body {
   background-color: var(--clr-bg);
   color: var(--clr-text);
