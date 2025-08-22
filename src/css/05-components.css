@@ -1,0 +1,149 @@
+/* 05-components.css - Styles for individual components */
+
+.logo {
+    margin-top: 1.6%;
+    margin-left: 1.6%;
+    font-family: var(--ff-primary);
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-bold);
+    letter-spacing: -1px;
+    color: var(--clr-text);
+}
+
+.cursor {
+    display: inline-block;
+    background-color: var(--clr-accent);
+    width: 24px;
+    height: 48px;
+    margin-left: var(--space-2);
+    animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+    from, to { background-color: transparent }
+    50% { background-color: var(--clr-accent); }
+}
+
+/* --- Process Item Component --- */
+.process-item .process-number {
+    font-family: var(--ff-mono);
+    font-size: var(--font-size-sm);
+    color: var(--clr-accent);
+    margin-bottom: var(--space-4);
+    display: block;
+}
+.process-item .process-title {
+    font-size: 20px;
+    font-weight: var(--font-bold);
+    margin-bottom: var(--space-3);
+}
+.process-item .process-description {
+    color: var(--clr-muted);
+}
+
+/* --- Case Study Card Component --- */
+.case-study-card {
+    border: 1px solid rgba(255, 248, 231, 0.2);
+    transition: background-color var(--anim-duration) ease;
+}
+.case-study-card:hover {
+    background-color: rgba(255, 248, 231, 0.05);
+}
+.card-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+.card-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+}
+.card-body {
+    padding: var(--space-4);
+}
+.card-title {
+    font-size: 20px;
+    font-weight: var(--font-bold);
+    margin-bottom: var(--space-2);
+}
+.card-description {
+    color: var(--clr-muted);
+    margin-bottom: var(--space-4);
+}
+.card-tag {
+    font-family: var(--ff-mono);
+    font-size: var(--font-size-xs);
+    border: 1px solid var(--clr-accent);
+    color: var(--clr-accent);
+    padding: var(--space-1) var(--space-2);
+    display: inline-block;
+}
+
+.process-item .process-number {
+font-family: var(--ff-mono);
+font-size: var(--font-size-sm);
+color: var(--clr-accent);
+margin-bottom: var(--space-4);
+display: block;
+}
+.process-item .process-title {
+font-size: 20px;
+font-weight: var(--font-bold);
+margin-bottom: var(--space-3);
+color: var(--clr-text);
+}
+.process-item .process-description {
+color: var(--clr-muted);
+}
+
+.case-study-card {
+border: 1px solid rgba(255, 248, 231, 0.2);
+transition: background-color var(--anim-duration) ease;
+}
+.case-study-card:hover {
+background-color: rgba(255, 248, 231, 0.05);
+}
+.card-link {
+text-decoration: none;
+color: inherit;
+display: block;
+}
+.card-image {
+width: 100%;
+height: auto;
+display: block;
+aspect-ratio: 4 / 3;
+object-fit: cover;
+background-color: var(--clr-muted);
+}
+
+.card-body {
+padding: var(--space-4);
+}
+.card-title {
+font-size: 20px;
+font-weight: var(--font-bold);
+margin-bottom: var(--space-2);
+}
+.card-description {
+color: var(--clr-muted);
+margin-bottom: var(--space-4);
+}
+.card-tag {
+font-family: var(--ff-mono);
+font-size: var(--font-size-xs);
+border: 1px solid var(--clr-accent);
+color: var(--clr-accent);
+padding: var(--space-1) var(--space-2);
+display: inline-block;
+text-transform: uppercase;
+}
+
+:is(a, button):focus-visible {
+  outline: 2px solid var(--clr-accent);
+  outline-offset: 4px;
+  border-radius: 2px;
+}

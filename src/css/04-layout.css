@@ -1,0 +1,130 @@
+/* 04-layout.css - The architectural grid and structure */
+.site-wrapper {
+  width: 100%;
+  min-height: 100vh;
+}
+.main-content {
+  width: 100%;
+  max-width: 1440px; /* Max width for large screens */
+  margin: 0 auto;
+  padding: var(--space-6);
+}
+.section {
+  padding: var(--space-8) 0;
+  border-bottom: 1px solid rgba(255, 248, 231, 0.2); /* Muted border */
+}
+.is-hidden {
+  display: none;
+}
+
+/* --- Hub Layouts --- */
+.section-title {
+    font-family: var(--ff-mono);
+    font-size: var(--font-size-sm);
+    text-transform: uppercase;
+    margin-bottom: var(--space-7);
+}
+
+.manifesto-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr; /* Asymmetrical grid */
+    gap: var(--space-6);
+}
+
+.manifesto-text p {
+    font-size: var(--font-size-lg);
+    line-height: 1.5;
+    max-width: 50ch;
+}
+
+.process-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-6);
+}
+
+.office-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-8);
+}
+
+/* --- Header & Footer Layout --- */
+.site-header, .site-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding-bottom: var(--space-4);
+    border-bottom: 1px solid rgba(255, 248, 231, 0.2);
+}
+
+.site-footer {
+    padding-top: var(--space-4);
+    margin-top: var(--space-8);
+    border-top: 1px solid rgba(255, 248, 231, 0.2);
+    border-bottom: none;
+}
+
+.header-logo, .footer-copyright {
+    font-weight: var(--font-bold);
+}
+
+.header-annotation, .footer-link {
+    font-family: var(--ff-mono);
+    font-size: var(--font-size-sm);
+    text-transform: uppercase;
+    color: var(--clr-muted);
+}
+
+.footer-link {
+    text-decoration: none;
+    color: var(--clr-text);
+    border-bottom: 1px solid var(--clr-accent);
+    transition: color 0.3s, border-color 0.3s;
+}
+.footer-link:hover {
+    color: var(--clr-accent);
+    border-color: var(--clr-text);
+}
+
+/* --- Hub Layouts --- */
+.section-title {
+    font-family: var(--ff-mono);
+    font-size: var(--font-size-sm);
+    text-transform: uppercase;
+    color: var(--clr-muted);
+    margin-bottom: var(--space-7);
+    font-weight: var(--font-regular);
+}
+
+.manifesto-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr; /* Asymmetrical grid */
+    gap: var(--space-6);
+    align-items: center;
+}
+
+.manifesto-text p {
+    font-size: var(--font-size-lg);
+    line-height: 1.5;
+    max-width: 50ch;
+}
+
+.process-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Responsive grid */
+    gap: var(--space-6);
+}
+
+.casestudies-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: var(--space-5);
+}
+
+.office-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: var(--space-8);
+    align-items: end;
+}

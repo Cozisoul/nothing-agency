@@ -1,24 +1,32 @@
-# Logs
-logs
-*.log
+# Node.js
+node_modules/
 npm-debug.log*
-yarn-debug.log*
 yarn-error.log*
-pnpm-debug.log*
-lerna-debug.log*
+pnpm-lock.yaml
 
-node_modules
-dist
-dist-ssr
-*.local
-
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
-.DS_Store
+# IDE & Editor specific files
+.idea/
+.vscode/
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
+
+# Build output
+dist/
+build/
+
+# Environment variables
+# CRITICAL: Never commit your secrets!
+.env
+.env.local
+.env.*.local
+
+# Operating System files
+.DS_Store
+Thumbs.db
+
+# Log files
+*.log
+logs/
