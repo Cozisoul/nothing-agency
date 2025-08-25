@@ -1,7 +1,7 @@
 /* 03-base.css - The default styles for the canvas */
 body {
-  background-color: var(--clr-bg);
-  color: var(--clr-text);
+  background-color: var(--bg);
+  color: var(--fg);
   font-family: var(--ff-primary);
   font-size: 16px;
   line-height: 1.6;

@@ -1,10 +1,11 @@
-/* 02-vars.css - The *nothing... Agency Design Tokens */
+/* 02-vars.css - The *nothing... Agency Design Tokens v2.1 */
 :root {
-  /* ── Palette (Dark Mode) ──────────────────────── */
-  --clr-bg:        #111111;
-  --clr-text:      #FFF8e7; /* Cosmic Latte */
-  --clr-accent:    #FF4500; /* OrangeRed */
-  --clr-muted:     #7E7E84;
+  /* ── Core Palette (Light Mode Default) ───────── */
+  --clr-bg:        #FFFFFF;
+  --clr-fg:        #111111; /* fg = foreground/text */
+  --clr-accent:    #0000FF; /* Blue for light mode links */
+  --clr-muted:     #666666;
+  --clr-border:    #e0e0e0;
 
   /* ── Typography ───────────────────────────────── */
   --ff-primary:   'Helvetica Neue', Helvetica, sans-serif;
@@ -16,4 +17,25 @@
 
   /* ── Animation ───────────────────────────────────── */
   --anim-duration: .6s;
+}
+
+/* This class will be added by JS to enable dark mode */
+.dark-mode {
+  --clr-bg:        #111111;
+  --clr-fg:        #FFF8e7; /* Cosmic Latte */
+  --clr-accent:    #FF4500; /* OrangeRed */
+  --clr-muted:     #7E7E84;
+  --clr-border:    rgba(255, 248, 231, 0.2);
+}
+
+/* This media query automatically applies dark mode if the user's OS is set to dark,
+   UNLESS they have manually toggled light mode. */
+@media (prefers-color-scheme: dark) {
+  :root:not(.light-mode) {
+    --clr-bg:        #111111;
+    --clr-fg:        #FFF8e7;
+    --clr-accent:    #FF4500;
+    --clr-muted:     #7E7E84;
+    --clr-border:    rgba(255, 248, 231, 0.2);
+  }
 }

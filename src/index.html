@@ -22,6 +22,7 @@
     <meta property="twitter:description" content="Digital Experiences, Reduced to their Essence.">
     <meta property="twitter:image" content="/assets/images/og-preview.png">
 
+    <link href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,700&f[]=satoshi@300,400,500,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
@@ -36,7 +37,8 @@
         <div id="main-content" class="main-content is-hidden">
             <header class="site-header">
                 <div class="header-logo">*nothing...</div>
-                <div class="header-annotation">* A TRANSDISCIPLINARY OFFICE</div>
+                <!-- ADD the .text-right class here for intentional asymmetry -->
+                <div class="header-annotation text-right">* A TRANSDISCIPLINARY OFFICE</div>
             </header>
 
             <main id="main-content">
@@ -72,29 +74,58 @@
 
                 <section id="case-studies" class="section">
                     <h2 class="section-title">* CASE STUDIES</h2>
-                    <div class="casestudies-grid">
-                        <!-- Case Study 1: Research Radio -->
+                    <div id="casestudies-grid" class="casestudies-grid">
+                        
+                        <!-- Case Study Card: NLG -->
                         <div class="case-study-card">
-                            <a href="[LINK_TO_RESEARCH_RADIO_WHEN_LIVE]" class="card-link" target="_blank" rel="noopener noreferrer">
-                                <img src="./assets/images/case-study-research-radio.jpg" alt="Screenshot of the Research Radio project website" class="card-image">
+                            <a href="#" class="card-link" target="_blank" rel="noopener noreferrer">
+                                <img src="/assets/images/case-study-nlg.jpg" alt="A promotional image for the NLG Structural Engineers project." class="card-image">
+                                <div class="card-body">
+                                    <h3 class="card-title">NLG Structural Engineers</h3>
+                                    <p class="card-description">A digital presence for a technical client, built on the philosophy of "The Blueprint as Art."</p>
+                                    <div class="card-tags"><span class="card-tag">Brand Identity</span><span class="card-tag">Web Experience</span></div>
+                                </div>
+                            </a>
+                        </div>
+
+                        <!-- Case Study Card: Research Radio -->
+                        <div class="case-study-card">
+                            <a href="#" class="card-link" target="_blank" rel="noopener noreferrer">
+                                <img src="/assets/images/case-study-research-radio.jpg" alt="A promotional image for the Research Radio project." class="card-image">
                                 <div class="card-body">
                                     <h3 class="card-title">Research Radio</h3>
-                                    <p class="card-description">A digital journal and archive for a transdisciplinary practice.</p>
-                                    <span class="card-tag">WEB APP</span>
+                                    <p class="card-description">A digital journal and archive for a transdisciplinary practice, featuring a unique, content-first user experience.</p>
+                                    <div class="card-tags"><span class="card-tag">Web App</span><span class="card-tag">Content Strategy</span></div>
                                 </div>
                             </a>
                         </div>
-                        <!-- Case Study 2: TMM-OS -->
+
+                        <!-- Case Study Card: Johannesburg Air -->
                         <div class="case-study-card">
-                            <a href="[https://github.com/Cozisoul/tmm-os]" class="card-link" target="_blank" rel="noopener noreferrer">
-                                <img src="/assets/images/case-study-tmm-os.jpg" alt="A conceptual image representing the TMM-OS system" class="card-image">
+                            <a href="#" class="card-link" target="_blank" rel="noopener noreferrer">
+                                <img src="/assets/images/case-study-johannesburg-air.jpg" alt="A promotional image for the Johannesburg Air project." class="card-image">
                                 <div class="card-body">
-                                    <h3 class="card-title">TMM-OS</h3>
-                                    <p class="card-description">A personal operating system for managing a creative practice.</p>
-                                    <span class="card-tag">SYSTEMS DESIGN</span>
+                                    <h3 class="card-title">Johannesburg Air</h3>
+                                    <p class="card-description">An interactive web experience that translates a year of air quality data into a generative soundscape.</p>
+                                    <div class="card-tags"><span class="card-tag">Data Art</span><span class="card-tag">Sonification</span></div>
                                 </div>
                             </a>
                         </div>
+
+                        <!-- Case Study Card: tmm-web -->
+                        <div class="case-study-card">
+                            <a href="https://github.com/Cozisoul/tmm-web" class="card-link" target="_blank" rel="noopener noreferrer">
+                                <img src="/assets/images/case-study-tmm-web.jpg" alt="A promotional image for the tmm-web project." class="card-image">
+                                <div class="card-body">
+                                    <h3 class="card-title">tmm-web</h3>
+                                    <p class="card-description">An interactive digital CV that transforms a professional summary into an explorable, annotated system.</p>
+                                    <div class="card-tags"><span class="card-tag">Web Experience</span><span class="card-tag">Portfolio Design</span></div>
+                                </div>
+                            </a>
+                        </div>
+
+                        <!-- Add Ntikama Ramohlale and E-commerce prototype here when ready -->
+
                     </div>
                 </section>
 
@@ -117,7 +148,11 @@
                 <div class="footer-contact">
                     <a href="mailto:thapelomasebe@hotmail.com" class="footer-link">GET IN TOUCH</a>
                 </div>
-                <div class="footer-copyright">
+                <!-- ADD the theme toggle button here -->
+                <div class="footer-theme-toggle">
+                    <button id="theme-toggle" class="theme-toggle">Toggle Theme</button>
+                </div>
+                <div class="footer-copyright text-right">
                     © 2025 *nothing...
                 </div>
             </footer>

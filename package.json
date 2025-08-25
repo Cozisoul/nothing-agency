@@ -6,9 +6,16 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "lint:js": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
+    "lint:css": "stylelint '**/*.css'",
+    "lint": "npm run lint:js && npm run lint:css"
   },
   "devDependencies": {
+    "eslint": "^9.34.0",
     "vite": "^7.1.2"
+  },
+  "dependencies": {
+    "lint": "^1.1.2"
   }
 }
