@@ -1,0 +1,73 @@
+@import "tailwindcss";
+@import "./debug.css";
+
+@theme {
+  /* Colors */
+  --color-bg: #111111;
+  --color-fg: #FFF8E7;
+  --color-accent: #FF4500;
+  --color-muted: #888888;
+  --color-bg-light: #1A1A1A;
+
+  /* Fonts */
+  --font-sys: 'Helvetica Neue', 'Helvetica', Arial, sans-serif;
+  --font-poetic: 'Helvetica Neue', 'Helvetica', Arial, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Menlo', 'monospace';
+
+  /* Spacing - Mapped to spacing utilities (gap-*, p-*, m-*) */
+  --spacing-layout-gap: clamp(1rem, 4vw, 3rem);
+}
+
+/* Custom CSS Variables for arbitrary values usage */
+:root {
+  --layout-gap: clamp(1rem, 4vw, 3rem);
+}
+
+/* Explicit Utilities for Fluid Typography */
+@utility text-fluid-h1 {
+  font-size: clamp(2.5rem, 5vw, 5rem);
+}
+
+@utility text-fluid-h2 {
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+@utility text-fluid-body {
+  font-size: clamp(1rem, 1.2vw, 1.125rem);
+}
+
+/* 1. Font Definitions */
+@font-face {
+  font-family: 'Satoshi';
+  src: url('/fonts/Satoshi-Variable.woff2') format('woff2');
+  font-weight: 300 900;
+  font-display: swap;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Clash Display';
+  src: url('/fonts/ClashDisplay-Variable.woff2') format('woff2');
+  font-weight: 300 700;
+  font-display: swap;
+  font-style: normal;
+}
+
+/* 2. Global Resets & Lenis Fixes */
+html.lenis { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
+
+/* 3. Selection Color */
+::selection {
+  background: var(--color-accent);
+  color: var(--color-bg);
+}
+
+/* 4. Hide Default Cursor (Desktop Only) */
+@media (pointer: fine) {
+  body, a, button {
+    cursor: none;
+  }
+}

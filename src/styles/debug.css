@@ -1,0 +1,18 @@
+/* src/styles/global.css additions */
+
+/* --- X-RAY MODE (Debug) --- */
+body.debug-mode * {
+  /* 1. Outline everything in OrangeRed */
+  outline: 1px solid var(--color-accent) !important;
+  
+  /* 2. Add a subtle tint to visualize spacing */
+  background-color: rgba(255, 69, 0, 0.05) !important;
+  
+  /* 3. Ensure outlines don't break layout */
+  outline-offset: -1px;
+}
+
+/* Optional: Hide specific elements in debug mode if they get in the way */
+body.debug-mode #generative-substrate {
+  opacity: 0.1;
+}

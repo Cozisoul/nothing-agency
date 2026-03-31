@@ -1,0 +1,38 @@
+---
+// src/components/ui/DebugToggle.astro
+---
+
+<button
+  id="debug-toggle"
+  class="font-mono text-[10px] uppercase tracking-widest text-muted hover:text-accent transition-colors duration-300"
+  data-cursor="TOGGLE X-RAY"
+>
+  [ DEBUG: OFF ]
+</button>
+
+<script>
+  // Runs on every page navigation
+  document.addEventListener("astro:page-load", () => {
+    const btn = document.getElementById("debug-toggle");
+    const body = document.body;
+
+    // Check if debug mode was left on (persistence)
+    const isDebug = localStorage.getItem("tmm-debug-mode") === "true";
+    if (isDebug) {
+      body.classList.add("debug-mode");
+      if (btn) btn.innerText = "[ DEBUG: ON ]";
+    }
+
+    if (btn) {
+      btn.addEventListener("click", () => {
+        body.classList.toggle("debug-mode");
+
+        const active = body.classList.contains("debug-mode");
+        btn.innerText = active ? "[ DEBUG: ON ]" : "[ DEBUG: OFF ]";
+
+        // Save preference
+        localStorage.setItem("tmm-debug-mode", active.toString());
+      });
+    }
+  });
+</script>

@@ -1,0 +1,36 @@
+---
+// src/components/Footer.astro
+import DebugToggle from "./ui/DebugToggle.astro";
+const year = new Date().getFullYear();
+---
+
+<footer class="py-8 border-t border-muted/20 mt-12">
+  <div class="flex flex-col justify-end items-end gap-8">
+    <!-- The Active Call to Action -->
+    <div class="text-right">
+      <a
+        href="mailto:hello@nothing-agency.com"
+        class="block font-sys text-fluid-h1 font-bold leading-none text-fg hover:text-accent transition-colors duration-300"
+        data-cursor="EMAIL"
+      >
+        INITIATE<br />PROJECT
+      </a>
+
+      <!-- Meta Data -->
+      <div
+        class="mt-8 flex flex-col md:flex-row justify-end items-end gap-6 font-mono text-xs uppercase tracking-widest text-muted"
+      >
+        <span>JHB / ZA — {year}</span>
+        <span class="hidden md:inline text-accent">/</span>
+        <!-- Debug Toggle (Skill 05) -->
+        <DebugToggle />
+        <span class="hidden md:inline text-accent">/</span>
+        <nav class="flex gap-6">
+          <a href="#" class="hover:text-fg transition-colors">Instagram</a>
+          <a href="#" class="hover:text-fg transition-colors">LinkedIn</a>
+          <a href="#" class="hover:text-fg transition-colors">Github</a>
+        </nav>
+      </div>
+    </div>
+  </div>
+</footer>

@@ -1,0 +1,49 @@
+---
+import MainLayout from "../layouts/MainLayout.astro";
+---
+
+<MainLayout title="* SYSTEM FAILURE">
+  <div
+    class="min-h-screen flex flex-col items-center justify-center text-center p-6"
+  >
+    <div class="relative mb-8">
+      <!-- Glitchy Title -->
+      <h1
+        class="font-sys text-fluid-h1 font-bold tracking-tighter text-accent mix-blend-exclusion"
+      >
+        404
+      </h1>
+      <div
+        class="absolute inset-0 text-fluid-h1 font-bold tracking-tighter text-fg opacity-50 blur-[1px] animate-pulse"
+      >
+        404
+      </div>
+    </div>
+
+    <div
+      class="font-mono text-sm tracking-widest text-muted uppercase space-y-2"
+    >
+      <p>Error: Data Not Found</p>
+      <p>Sector: Unknown</p>
+      <p class="text-accent mt-4">
+        Rerouting to origin in <span id="countdown">5</span>s...
+      </p>
+    </div>
+  </div>
+</MainLayout>
+
+<script>
+  // The Redirect Logic
+  let seconds = 5;
+  const el = document.getElementById("countdown");
+
+  const timer = setInterval(() => {
+    seconds--;
+    if (el) el.innerText = seconds.toString();
+
+    if (seconds <= 0) {
+      clearInterval(timer);
+      window.location.href = "/";
+    }
+  }, 1000);
+</script>

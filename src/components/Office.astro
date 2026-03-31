@@ -1,0 +1,41 @@
+---
+// src/components/Office.astro
+---
+
+<section id="office" class="py-12">
+  <!-- The Label - Full Width Above -->
+  <h3 class="font-mono text-sm text-accent tracking-widest mb-6 text-right">
+    * THE OFFICE
+  </h3>
+
+  <!-- The Content Container: Side by Side Grid -->
+  <div class="w-full grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+    <!-- Left Column: The Bio (Manifesto) -->
+    <div class="text-left">
+      <p class="font-sys text-fluid-h2 leading-tight text-fg mb-4">
+        We operate as a fluid structure, not a fixed agency.
+      </p>
+      <p class="font-sys text-base text-muted max-w-[40ch] leading-relaxed">
+        Led by Thapelo Masebe, the office collaborates with a curated network of
+        expert developers and specialists to execute our vision. No fixed teams.
+        Just the right minds for the problem.
+      </p>
+    </div>
+
+    <!-- Right Column: The Leadership - Aligned with manifesto top -->
+    <div class="flex flex-col items-end text-right">
+      <div class="group">
+        <h4
+          class="font-sys text-4xl font-bold text-fg group-hover:text-accent transition-colors duration-300 uppercase leading-none mb-2"
+        >
+          Thapelo Masebe
+        </h4>
+        <span
+          class="font-mono text-[10px] text-muted block tracking-widest uppercase"
+        >
+          Founder / Creative Director
+        </span>
+      </div>
+    </div>
+  </div>
+</section>

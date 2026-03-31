@@ -1,0 +1,45 @@
+---
+// src/components/Header.astro
+const links = [
+  { text: "Manifesto", href: "#manifesto" },
+  { text: "Work", href: "#work" },
+  { text: "Office", href: "#office" },
+];
+---
+
+<header
+  id="site-header"
+  class="fixed top-0 left-0 w-full z-40 px-[var(--layout-gap)] py-6 flex justify-between items-baseline mix-blend-difference text-fg opacity-0 transition-opacity duration-1000 delay-500 pointer-events-none"
+  transition:persist
+>
+  <!-- Left: The Mark -->
+  <div class="font-poetic text-xl font-bold tracking-tight">*n...</div>
+
+  <!-- Right: The System Navigation -->
+  <nav>
+    <ul class="flex gap-6 font-mono text-xs uppercase tracking-widest">
+      {
+        links.map((link) => (
+          <li>
+            <a
+              href={link.href}
+              class="hover:text-accent transition-colors duration-300"
+            >
+              {link.text}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+</header>
+
+<script>
+  // Wait for the gate to open before revealing the header
+  window.addEventListener("site-unlocked", () => {
+    const header = document.getElementById("site-header");
+    if (header) {
+      header.classList.remove("opacity-0", "pointer-events-none");
+    }
+  });
+</script>

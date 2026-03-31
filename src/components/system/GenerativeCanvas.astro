@@ -1,0 +1,33 @@
+---
+// src/components/system/GenerativeCanvas.astro
+---
+
+<!-- The Container -->
+<div
+  id="generative-substrate"
+  class="fixed inset-0 z-0 pointer-events-none opacity-40"
+>
+</div>
+
+<script>
+  // We use dynamic import to ensure p5 only loads on the client
+  import { gridSketch } from "../../scripts/sketches/grid";
+
+  // Function to initialize the sketch
+  const initP5 = async () => {
+    const container = document.getElementById("generative-substrate");
+    if (!container) return;
+
+    // Remove any existing canvas to prevent duplicates on navigation
+    container.innerHTML = "";
+
+    const p5 = (await import("p5")).default;
+    new p5(gridSketch);
+  };
+
+  // Run on initial load
+  initP5();
+
+  // Run on View Transitions (if you navigate between pages)
+  document.addEventListener("astro:page-load", initP5);
+</script>

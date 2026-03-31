@@ -1,0 +1,1087 @@
+
+### **Skill 00: Execution Plan**
+
+#### **Step 1: Install The Physics Engine**
+
+Open your terminal in the `nothing-agency` project root and run this command to install the animation and scrolling libraries.
+
+```bash
+npm install gsap @studio-freight/lenis
+```
+
+---
+
+#### **Step 2: Configure The Visual System (`tailwind.config.mjs`)**
+
+We need to hard-code your Brand Identity into the CSS engine. This ensures that every time we use `bg-bg` or `text-accent`, it is the exact hexadecimal value from your brand guide.
+
+**Action:** Open `tailwind.config.mjs` and replace the content with this definitive configuration:
+
+```javascript
+/** @type {import('tailwindcss').Config} */
+export default {
+	content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
+	theme: {
+		extend: {
+			colors: {
+				// TMM-OS Definitive Palette
+				bg: '#111111',       // System Black
+				fg: '#FFF8E7',       // Cosmic Latte
+				accent: '#FF4500',   // OrangeRed (The "Poetic" Spark)
+				muted: '#888888',    // Structural Grey
+				'bg-light': '#1A1A1A', // Secondary Surface
+			},
+			fontFamily: {
+				// The "Office" Voice
+				sys: ['"Helvetica Neue"', 'Helvetica', 'Arial', 'sans-serif'],
+				// The "Annotation" Voice
+				mono: ['Menlo', 'Courier New', 'monospace'],
+			},
+			fontSize: {
+				// Fluid Typography (Clamps for perfect scaling)
+				'fluid-h1': 'clamp(3rem, 6vw, 6rem)',
+				'fluid-h2': 'clamp(1.5rem, 3vw, 3rem)',
+				'fluid-body': 'clamp(1rem, 1.1vw, 1.25rem)',
+				'fluid-sm': 'clamp(0.75rem, 0.9vw, 0.875rem)',
+			},
+			spacing: {
+				// The Systematic Grid Gaps
+				'layout-gap': 'clamp(1rem, 4vw, 3rem)',
+			},
+			transitionTimingFunction: {
+				// The "Heavy" Ease (for that premium feel)
+				'heavy': 'cubic-bezier(0.25, 1, 0.5, 1)',
+			}
+		},
+	},
+	plugins: [],
+}
+```
+
+---
+
+#### **Step 3: Initialize The Physics (`src/utils/physics.ts`)**
+
+We need a central utility to manage the scrolling. We don't want to write this code in every component. We write it once, here.
+
+**Action:**
+1.  Create a folder: `src/utils`
+2.  Create a file: `src/utils/physics.ts`
+3.  Paste this code:
+
+```typescript
+import Lenis from '@studio-freight/lenis';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+// Register GSAP plugins globally
+gsap.registerPlugin(ScrollTrigger);
+
+let lenis: Lenis | null = null;
+
+export const initPhysics = () => {
+  // 1. Initialize Lenis (The Smooth Scroll)
+  lenis = new Lenis({
+    duration: 1.2, // The "Weight" of the scroll
+    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Exponential ease
+    direction: 'vertical',
+    gestureDirection: 'vertical',
+    smooth: true,
+    mouseMultiplier: 1,
+    smoothTouch: false,
+    touchMultiplier: 2,
+  });
+
+  // 2. Connect Lenis to GSAP
+  // This ensures animations sync perfectly with the smooth scroll
+  lenis.on('scroll', ScrollTrigger.update);
+
+  gsap.ticker.add((time) => {
+    lenis?.raf(time * 1000);
+  });
+
+  gsap.ticker.lagSmoothing(0);
+
+  return lenis;
+};
+
+export const getLenis = () => lenis;
+```
+
+---
+
+#### **Step 4: Wire the Engine (`src/layouts/MainLayout.astro`)**
+
+Now we hook this utility into your Master Layout so it runs on every page.
+
+**Action:** Open `src/layouts/MainLayout.astro` and update the `<script>` section at the bottom.
+
+```astro
+---
+import '../styles/global.css';
+import { ViewTransitions } from 'astro:transitions';
+
+interface Props {
+	title: string;
+	description?: string;
+}
+
+const { 
+  title, 
+  description = "A transdisciplinary office merging systematic rigor with poetic inquiry." 
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" class="bg-bg text-fg antialiased selection:bg-accent selection:text-bg">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="description" content={description} />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+        <!-- Enable seamless page morphing -->
+        <ViewTransitions />
+	</head>
+	<body class="font-sys relative min-h-screen overflow-x-hidden">
+        
+        <slot />
+
+        <script>
+            import { initPhysics } from '../utils/physics';
+
+            // Run on initial load
+            initPhysics();
+
+            // Re-run on View Transition navigation (Critical for Astro)
+            document.addEventListener('astro:page-load', () => {
+                // Any page-specific re-initialization goes here if needed
+                console.log("System Ready: Physics Engine Active");
+            });
+        </script>
+	</body>
+</html>
+```
+
+---
+
+### **Verification**
+
+1.  Run `npm run dev`.
+2.  Open the site.
+3.  **Scroll.** It might feel subtle right now without much content, but it should feel "detached" from the standard browser scroll—slightly smoother, slightly heavier.
+4.  Check the Console. You should see `"System Ready: Physics Engine Active"`.
+
+**Skill 00 is complete.** The environment is primed.
+
+
+
+---
+
+### **Skill 01: Execution Plan**
+
+#### **Step 1: Install p5.js**
+
+Open your terminal in the project root:
+
+```bash
+npm install p5
+npm install --save-dev @types/p5
+```
+
+---
+
+#### **Step 2: Create the Sketch Logic (`src/scripts/sketches/grid.ts`)**
+
+We will write the p5.js logic in "Instance Mode" so it plays nicely with Astro and doesn't pollute the global scope.
+
+1.  Create a folder: `src/scripts/sketches`
+2.  Create a file: `src/scripts/sketches/grid.ts`
+
+**Paste this code:**
+
+```typescript
+import type p5 from 'p5';
+
+export const gridSketch = (p: p5) => {
+  // CONFIGURATION
+  const gap = 40; // Space between points
+  const pointSize = 2;
+  const influenceRadius = 150; // How far the mouse affects points
+  const force = 0.5; // How strongly they move away
+
+  let points: { x: number; y: number; originalX: number; originalY: number }[] = [];
+
+  p.setup = () => {
+    // Create a canvas that fills the window
+    p.createCanvas(window.innerWidth, window.innerHeight);
+    p.noStroke();
+    p.fill(60); // Subtle Grey (#3C3C3C) - Visible but quiet on black
+    
+    // Generate the Grid Data
+    createGrid();
+  };
+
+  p.draw = () => {
+    p.clear(); // Transparent background
+
+    // Loop through all points
+    for (let i = 0; i < points.length; i++) {
+      const pt = points[i];
+      
+      // Calculate distance to mouse
+      const d = p.dist(p.mouseX, p.mouseY, pt.originalX, pt.originalY);
+
+      // THE PHYSICS: Displacement
+      if (d < influenceRadius) {
+        const angle = p.atan2(pt.originalY - p.mouseY, pt.originalX - p.mouseX);
+        // Move point away from mouse based on proximity
+        const offset = p.map(d, 0, influenceRadius, gap * force, 0);
+        pt.x = pt.originalX + p.cos(angle) * offset;
+        pt.y = pt.originalY + p.sin(angle) * offset;
+      } else {
+        // Return to original position (Elasticity)
+        // Simple lerp for smooth return
+        pt.x = p.lerp(pt.x, pt.originalX, 0.1);
+        pt.y = p.lerp(pt.y, pt.originalY, 0.1);
+      }
+
+      // Draw the point
+      p.circle(pt.x, pt.y, pointSize);
+    }
+  };
+
+  p.windowResized = () => {
+    p.resizeCanvas(window.innerWidth, window.innerHeight);
+    createGrid();
+  };
+
+  function createGrid() {
+    points = [];
+    for (let x = gap / 2; x < window.innerWidth; x += gap) {
+      for (let y = gap / 2; y < window.innerHeight; y += gap) {
+        points.push({
+          x: x,
+          y: y,
+          originalX: x,
+          originalY: y
+        });
+      }
+    }
+  }
+};
+```
+
+---
+
+#### **Step 3: Build the Component (`src/components/system/GenerativeCanvas.astro`)**
+
+This Astro component will load p5.js only on the client-side and attach the sketch to a `div`.
+
+1.  Create a folder: `src/components/system`
+2.  Create a file: `src/components/system/GenerativeCanvas.astro`
+
+**Paste this code:**
+
+```astro
+---
+// src/components/system/GenerativeCanvas.astro
+---
+
+<div id="generative-substrate" class="fixed inset-0 z-[-1] opacity-50 pointer-events-none mix-blend-screen"></div>
+
+<script>
+  import p5 from 'p5';
+  import { gridSketch } from '../../scripts/sketches/grid';
+
+  const container = document.getElementById('generative-substrate');
+  
+  if (container) {
+    // Initialize p5 in instance mode
+    new p5(gridSketch, container);
+  }
+
+  // Handle Astro View Transitions (Cleanup old canvas if needed)
+  document.addEventListener('astro:before-swap', () => {
+    const oldCanvas = container?.querySelector('canvas');
+    if (oldCanvas) oldCanvas.remove();
+  });
+  
+  // Re-init on navigation
+  document.addEventListener('astro:page-load', () => {
+      if (container && !container.querySelector('canvas')) {
+          new p5(gridSketch, container);
+      }
+  });
+</script>
+```
+
+---
+
+#### **Step 4: Mount it in the Layout (`src/layouts/MainLayout.astro`)**
+
+We place this behind everything, but *under* the Noise layer.
+
+**Action:** Open `src/layouts/MainLayout.astro`.
+
+1.  **Import:** `import GenerativeCanvas from '../components/system/GenerativeCanvas.astro';`
+2.  **Mount:** Place `<GenerativeCanvas />` inside the `<body>`, right at the top.
+
+```astro
+<!-- Inside MainLayout.astro body -->
+<body class="font-sys relative min-h-screen overflow-x-hidden bg-bg text-fg">
+    
+    <!-- 1. The Generative Substrate (Living Grid) -->
+    <GenerativeCanvas />
+
+    <!-- 2. The Noise Overlay (Texture) -->
+    <!-- (Your existing noise div goes here) -->
+    <div class="fixed inset-0 z-50 pointer-events-none opacity-[0.04] mix-blend-overlay" ... ></div>
+
+    <!-- 3. Content -->
+    <slot />
+
+    <!-- ... scripts ... -->
+</body>
+```
+
+---
+
+### **Verification**
+
+1.  Run `npm run dev`.
+2.  Look at the background. You should see a uniform grid of small grey dots.
+3.  **Move your mouse.** The grid should warp and ripple around your cursor, like a magnetic field.
+4.  **Stop moving.** The grid should snap back to perfect order.
+
+This is **Skill 01**. You now have a "Living System" as your foundation.
+
+**Skill 01 is complete.**
+
+
+
+### **Skill 02: Execution Plan**
+
+#### **Step 1: Create the Motion Logic (`src/scripts/kinetic.ts`)**
+
+We need a script that listens to the scroll velocity from **Lenis** and applies it as a transformation to our text using **GSAP**.
+
+1.  Create a folder: `src/scripts` (if it doesn't exist).
+2.  Create a file: `src/scripts/kinetic.ts`
+
+**Paste this code:**
+
+```typescript
+import { gsap } from 'gsap';
+import { getLenis } from '../utils/physics';
+
+export const initKineticType = () => {
+  const lenis = getLenis();
+  if (!lenis) return;
+
+  // 1. Select all elements we want to react to physics
+  const targets = document.querySelectorAll('.kinetic-text');
+  
+  if (!targets.length) return;
+
+  // 2. Create a GSAP QuickSetter for maximum performance
+  // We use quickSetter because it skips parsing strings every frame.
+  // We skew on the Y axis to give it a "drag" effect.
+  const setSkew = gsap.quickSetter(targets, "skewY", "deg");
+  const setRotate = gsap.quickSetter(targets, "rotate", "deg"); // Optional subtle rotation
+
+  // 3. Hook into the Scroll Loop
+  lenis.on((e: any) => {
+    const velocity = e.velocity;
+
+    // 4. The Math (Clamp the effect so it doesn't go crazy)
+    // We divide velocity to make the effect subtle.
+    const skewAmount = Math.max(Math.min(velocity / 15, 10), -10);
+
+    // 5. Apply the physics
+    setSkew(skewAmount);
+  });
+};
+```
+
+---
+
+#### **Step 2: Activate the Script (`src/layouts/MainLayout.astro`)**
+
+We need to tell the site to run this calculation on every page load.
+
+**Action:** Open `src/layouts/MainLayout.astro` and update the script tag.
+
+```astro
+<!-- Inside the <script> tag at the bottom of MainLayout.astro -->
+<script>
+    import { initPhysics } from '../utils/physics';
+    import { initKineticType } from '../scripts/kinetic'; // Import the new skill
+
+    // Initial Load
+    initPhysics();
+    initKineticType(); // Activate Kinetic Type
+
+    // View Transitions (Re-run on navigation)
+    document.addEventListener('astro:page-load', () => {
+        initKineticType(); // Re-activate for new content
+        console.log("System Ready: Physics & Kinetics Active");
+    });
+</script>
+```
+
+---
+
+#### **Step 3: Apply to the Manifesto (`src/pages/index.astro`)**
+
+Now, we choose which text gets this special behavior. The **Manifesto** headline is the perfect candidate. It's big, it's bold, and it sets the tone.
+
+**Action:** Open `src/pages/index.astro`. Add the class `kinetic-text` to your Manifesto H2.
+
+```astro
+<!-- Inside src/pages/index.astro -->
+
+<!-- MANIFESTO SECTION -->
+<section id="manifesto" class="...">
+  <div class="w-full md:w-3/4 lg:w-2/3 ml-auto text-right">
+    
+    <!-- Add 'kinetic-text' class here.
+         We also add 'origin-right' so it skews from the right anchor point. -->
+    <h2 class="kinetic-text origin-right font-sys text-fluid-h2 font-medium text-fg leading-[1.1] mb-8 will-change-transform">
+      We are a transdisciplinary office. We merge systematic rigor with poetic inquiry.
+    </h2>
+    
+    <!-- ... -->
+  </div>
+</section>
+```
+
+*Note: `will-change-transform` is a CSS hint that tells the browser to optimize this element for movement.*
+
+---
+
+### **Verification**
+
+1.  Run `npm run dev`.
+2.  Wait for the Entry Gate to unlock.
+3.  **Scroll up and down quickly.**
+4.  Observe the Manifesto text. It should slightly **warp and shear** vertically, as if the speed of the scroll is dragging it.
+5.  Stop scrolling. It should snap back to being perfectly straight.
+
+
+
+This is **Skill 02**. It adds weight and inertia to your words.
+
+**Skill 02 is complete.**
+
+
+### **Skill 02: Execution Plan**
+
+#### **Step 1: Create the Motion Logic (`src/scripts/kinetic.ts`)**
+
+We need a script that listens to the scroll velocity from **Lenis** and applies it as a transformation to our text using **GSAP**.
+
+1.  Create a folder: `src/scripts` (if it doesn't exist).
+2.  Create a file: `src/scripts/kinetic.ts`
+
+**Paste this code:**
+
+```typescript
+import { gsap } from 'gsap';
+import { getLenis } from '../utils/physics';
+
+export const initKineticType = () => {
+  const lenis = getLenis();
+  if (!lenis) return;
+
+  // 1. Select all elements we want to react to physics
+  const targets = document.querySelectorAll('.kinetic-text');
+  
+  if (!targets.length) return;
+
+  // 2. Create a GSAP QuickSetter for maximum performance
+  // We use quickSetter because it skips parsing strings every frame.
+  // We skew on the Y axis to give it a "drag" effect.
+  const setSkew = gsap.quickSetter(targets, "skewY", "deg");
+  const setRotate = gsap.quickSetter(targets, "rotate", "deg"); // Optional subtle rotation
+
+  // 3. Hook into the Scroll Loop
+  lenis.on((e: any) => {
+    const velocity = e.velocity;
+
+    // 4. The Math (Clamp the effect so it doesn't go crazy)
+    // We divide velocity to make the effect subtle.
+    const skewAmount = Math.max(Math.min(velocity / 15, 10), -10);
+
+    // 5. Apply the physics
+    setSkew(skewAmount);
+  });
+};
+```
+
+---
+
+#### **Step 2: Activate the Script (`src/layouts/MainLayout.astro`)**
+
+We need to tell the site to run this calculation on every page load.
+
+**Action:** Open `src/layouts/MainLayout.astro` and update the script tag.
+
+```astro
+<!-- Inside the <script> tag at the bottom of MainLayout.astro -->
+<script>
+    import { initPhysics } from '../utils/physics';
+    import { initKineticType } from '../scripts/kinetic'; // Import the new skill
+
+    // Initial Load
+    initPhysics();
+    initKineticType(); // Activate Kinetic Type
+
+    // View Transitions (Re-run on navigation)
+    document.addEventListener('astro:page-load', () => {
+        initKineticType(); // Re-activate for new content
+        console.log("System Ready: Physics & Kinetics Active");
+    });
+</script>
+```
+
+---
+
+#### **Step 3: Apply to the Manifesto (`src/pages/index.astro`)**
+
+Now, we choose which text gets this special behavior. The **Manifesto** headline is the perfect candidate. It's big, it's bold, and it sets the tone.
+
+**Action:** Open `src/pages/index.astro`. Add the class `kinetic-text` to your Manifesto H2.
+
+```astro
+<!-- Inside src/pages/index.astro -->
+
+<!-- MANIFESTO SECTION -->
+<section id="manifesto" class="...">
+  <div class="w-full md:w-3/4 lg:w-2/3 ml-auto text-right">
+    
+    <!-- Add 'kinetic-text' class here.
+         We also add 'origin-right' so it skews from the right anchor point. -->
+    <h2 class="kinetic-text origin-right font-sys text-fluid-h2 font-medium text-fg leading-[1.1] mb-8 will-change-transform">
+      We are a transdisciplinary office. We merge systematic rigor with poetic inquiry.
+    </h2>
+    
+    <!-- ... -->
+  </div>
+</section>
+```
+
+*Note: `will-change-transform` is a CSS hint that tells the browser to optimize this element for movement.*
+
+---
+
+### **Verification**
+
+1.  Run `npm run dev`.
+2.  Wait for the Entry Gate to unlock.
+3.  **Scroll up and down quickly.**
+4.  Observe the Manifesto text. It should slightly **warp and shear** vertically, as if the speed of the scroll is dragging it.
+5.  Stop scrolling. It should snap back to being perfectly straight.
+
+This is **Skill 02**. It adds weight and inertia to your words.
+
+**Skill 02 is complete.**
+
+### **Skill 03: Execution Plan**
+
+#### **Step 1: Install the React Engine**
+
+We need React to handle the "interactive island" of the toggle.
+
+Open your terminal in the project root and run:
+
+```bash
+npx astro add react
+```
+*(Press `y` to all prompts to install dependencies and update your config automatically.)*
+
+---
+
+#### **Step 2: Create the Work Feed Component (`src/components/work/WorkFeed.tsx`)**
+
+This component will receive your project data and render it in two different modes.
+
+1.  Create a folder: `src/components/work`
+2.  Create a file: `src/components/work/WorkFeed.tsx` (Note the `.tsx` extension for TypeScript).
+
+**Paste this code:**
+
+```tsx
+import React, { useState } from 'react';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  projects: CollectionEntry<'projects'>[];
+}
+
+export default function WorkFeed({ projects }: Props) {
+  const [view, setView] = useState<'grid' | 'table'>('grid');
+
+  return (
+    <div className="w-full">
+      
+      {/* 1. THE CONTROLS (The Switch) */}
+      <div className="flex justify-end mb-12 border-b border-muted/20 pb-4">
+        <div className="flex gap-6 font-mono text-xs tracking-widest cursor-pointer select-none">
+          <button 
+            onClick={() => setView('grid')}
+            className={`transition-colors duration-300 ${view === 'grid' ? 'text-accent' : 'text-muted hover:text-fg'}`}
+          >
+            [ VISUAL ]
+          </button>
+          <button 
+            onClick={() => setView('table')}
+            className={`transition-colors duration-300 ${view === 'table' ? 'text-accent' : 'text-muted hover:text-fg'}`}
+          >
+            [ INDEX ]
+          </button>
+        </div>
+      </div>
+
+      {/* 2. THE GRID VIEW (The Poetic) */}
+      {view === 'grid' && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-[var(--layout-gap)] gap-y-32 animate-in fade-in duration-500">
+          {projects.map((project) => (
+            <a 
+              key={project.slug} 
+              href={project.data.link} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="group block w-full cursor-none" // cursor-none because we use our Custom HUD
+              data-cursor="VIEW CASE"
+            >
+              <div className="relative w-full aspect-[4/3] overflow-hidden bg-bg-light mb-6">
+                <img 
+                  src={project.data.image} 
+                  alt={project.data.title}
+                  className="w-full h-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.25,1,0.5,1)] group-hover:scale-105 opacity-90 group-hover:opacity-100"
+                />
+              </div>
+              <div className="flex flex-row-reverse justify-between items-baseline border-t border-muted/20 pt-4 text-right">
+                <div className="flex flex-col items-end">
+                  <span className="font-mono text-xs text-accent tracking-widest uppercase mb-1">
+                    * {project.data.tag}
+                  </span>
+                  <h3 className="font-sys font-bold text-3xl text-fg group-hover:text-accent transition-colors duration-300">
+                    {project.data.title}
+                  </h3>
+                </div>
+                <span className="font-mono text-xs text-muted">
+                  [{project.data.year}]
+                </span>
+              </div>
+            </a>
+          ))}
+        </div>
+      )}
+
+      {/* 3. THE TABLE VIEW (The Systematic) */}
+      {view === 'table' && (
+        <div className="w-full animate-in fade-in duration-500">
+          {/* Table Header */}
+          <div className="grid grid-cols-12 border-b border-muted text-muted font-mono text-xs uppercase tracking-widest pb-4 mb-4">
+            <div className="col-span-1">ID</div>
+            <div className="col-span-5">Project / Client</div>
+            <div className="col-span-3 text-right">Service</div>
+            <div className="col-span-2 text-right">Year</div>
+            <div className="col-span-1 text-right">Link</div>
+          </div>
+
+          {/* Table Rows */}
+          <div className="flex flex-col">
+            {projects.map((project, index) => (
+              <a 
+                key={project.slug}
+                href={project.data.link}
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="group grid grid-cols-12 py-6 border-b border-muted/20 hover:bg-white/5 transition-colors duration-200 cursor-none items-baseline"
+                data-cursor="OPEN DATA"
+              >
+                <div className="col-span-1 font-mono text-xs text-muted">
+                  {(index + 1).toString().padStart(2, '0')}
+                </div>
+                <div className="col-span-5 font-sys text-xl font-bold text-fg group-hover:text-accent transition-colors">
+                  {project.data.title}
+                </div>
+                <div className="col-span-3 text-right font-mono text-xs text-muted uppercase">
+                  {project.data.tag}
+                </div>
+                <div className="col-span-2 text-right font-mono text-xs text-muted">
+                  {project.data.year}
+                </div>
+                <div className="col-span-1 text-right font-mono text-xs text-accent">
+                  ↗
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+
+    </div>
+  );
+}
+```
+
+---
+
+#### **Step 3: Integrate into Homepage (`src/pages/index.astro`)**
+
+We replace the old static grid with this new React "Island."
+
+**Action:** Open `src/pages/index.astro`.
+
+1.  **Import the component** at the top:
+    ```astro
+    import WorkFeed from '../components/work/WorkFeed.tsx';
+    ```
+
+2.  **Replace the `<section id="work">`** content with this:
+
+    ```astro
+    <!-- WORK SECTION -->
+    <section id="work" class="min-h-screen mb-32">
+      
+      <!-- We load the WorkFeed. 
+           client:load tells Astro to hydrate this React component immediately 
+           so the interactive toggle works. -->
+      <WorkFeed projects={sortedProjects} client:load />
+
+    </section>
+    ```
+
+---
+
+### **Verification**
+
+1.  Run `npm run dev`.
+2.  Scroll to the Work section.
+3.  You will see the **[ VISUAL ] / [ INDEX ]** toggle on the right.
+4.  **Click [ INDEX ].**
+5.  The big images should instantly vanish, replaced by a dense, brutalist Data Table.
+6.  Hovering over the table rows should highlight them and trigger the custom cursor (`OPEN DATA`).
+7.  **Click [ VISUAL ].** The imagery returns.
+
+This feature proves you can organize information for different contexts—a critical skill for a Data Scientist/Designer.
+
+**Skill 03 is complete.**
+
+
+
+### **Skill 04: Execution Plan**
+
+#### **Step 1: Create the Cursor Component**
+
+We need a dedicated component to handle the logic and rendering.
+
+1.  Create a folder: `src/components/ui`
+2.  Create a file: `src/components/ui/CursorHUD.astro`
+
+**Paste this code:**
+
+```astro
+---
+// src/components/ui/CursorHUD.astro
+---
+
+<!-- The HUD Container -->
+<div id="cursor-hud" class="fixed top-0 left-0 z-[9999] pointer-events-none hidden md:flex items-center justify-center mix-blend-difference">
+  
+  <!-- The Crosshair (Default) -->
+  <div id="cursor-crosshair" class="w-4 h-4 relative flex items-center justify-center transition-opacity duration-300">
+    <div class="absolute w-[1px] h-full bg-fg"></div>
+    <div class="absolute h-[1px] w-full bg-fg"></div>
+  </div>
+
+  <!-- The Label (Active State) -->
+  <div id="cursor-label" class="absolute bg-fg text-bg font-mono text-[10px] uppercase tracking-widest px-2 py-1 opacity-0 scale-90 transition-all duration-300">
+    <span id="cursor-text">VIEW</span>
+  </div>
+
+</div>
+
+<script>
+  import { gsap } from 'gsap';
+
+  // Run on every page navigation (Astro View Transitions)
+  document.addEventListener('astro:page-load', () => {
+    
+    const hud = document.getElementById('cursor-hud');
+    const label = document.getElementById('cursor-label');
+    const textSpan = document.getElementById('cursor-text');
+    const crosshair = document.getElementById('cursor-crosshair');
+
+    // If we are on mobile, abort (CSS hides it, but let's save JS cycles)
+    if (!hud || window.matchMedia('(pointer: coarse)').matches) return;
+
+    // 1. Setup Physics (GSAP QuickSetter for performance)
+    // We center the HUD on the mouse coordinates
+    const setX = gsap.quickSetter(hud, "x", "px");
+    const setY = gsap.quickSetter(hud, "y", "px");
+
+    // 2. Mouse Movement Logic
+    window.addEventListener('mousemove', (e) => {
+      // Direct mapping for instant response (Systematic)
+      // Or add a slight delay in GSAP for "weight" (Poetic)
+      setX(e.clientX);
+      setY(e.clientY);
+    });
+
+    // 3. Interaction Logic (Hovering)
+    // We scan the document for interactive elements
+    const interactiveElements = document.querySelectorAll('a, button, [data-cursor]');
+
+    interactiveElements.forEach((el) => {
+      
+      // MOUSE ENTER
+      el.addEventListener('mouseenter', () => {
+        const customLabel = el.getAttribute('data-cursor');
+        
+        // Change text if data-attribute exists, otherwise default to "OPEN"
+        textSpan.innerText = customLabel || 'OPEN';
+
+        // Animate State Change
+        gsap.to(crosshair, { opacity: 0, duration: 0.2 }); // Hide Crosshair
+        gsap.to(label, { opacity: 1, scale: 1, duration: 0.3, ease: 'power2.out' }); // Show Label
+      });
+
+      // MOUSE LEAVE
+      el.addEventListener('mouseleave', () => {
+        // Revert State
+        gsap.to(crosshair, { opacity: 1, duration: 0.2 });
+        gsap.to(label, { opacity: 0, scale: 0.9, duration: 0.2 });
+      });
+
+    });
+
+  });
+</script>
+
+<style>
+  /* Ensure it sits on top of everything but doesn't block clicks */
+  #cursor-hud {
+    transform: translate(-50%, -50%); /* Centers the div on the coordinate */
+    /* mix-blend-mode difference makes it visible on white OR black backgrounds */
+    mix-blend-mode: difference; 
+  }
+</style>
+```
+
+---
+
+#### **Step 2: Hide the System Cursor (`src/styles/global.css`)**
+
+We need to turn off the default Mac/Windows arrow pointer so our HUD is the only thing the user sees.
+
+**Action:** Open `src/styles/global.css` and add this rule at the bottom.
+
+```css
+/* src/styles/global.css */
+
+/* ... existing styles ... */
+
+/* Hide default cursor on desktop only */
+@media (pointer: fine) {
+  body, a, button {
+    cursor: none;
+  }
+}
+```
+
+---
+
+#### **Step 3: Mount it to the Layout (`src/layouts/MainLayout.astro`)**
+
+We place this in the Main Layout so it persists across every page view.
+
+**Action:** Open `src/layouts/MainLayout.astro`. Import and add the component just before the closing `</body>` tag.
+
+```astro
+---
+// ... imports
+import CursorHUD from '../components/ui/CursorHUD.astro'; // Import
+// ...
+---
+
+<!doctype html>
+<!-- ... html ... -->
+	<body class="...">
+        <!-- ... content slot ... -->
+        <slot />
+
+        <CursorHUD /> <!-- Mount Component -->
+
+        <!-- ... scripts ... -->
+	</body>
+</html>
+```
+
+---
+
+#### **Step 4: Tag Your Elements (Data Attributes)**
+
+Now, to make it magical, you need to tell the cursor *what* to say. We do this by adding `data-cursor` attributes to your elements.
+
+**Action:** Open `src/pages/index.astro`.
+
+1.  **On the "Initiate Project" Link (Footer):**
+    Change the link code to include the attribute.
+    ```html
+    <a href="mailto:..." data-cursor="EMAIL">INITIATE PROJECT</a>
+    ```
+
+2.  **On the Project Cards (`src/components/ProjectCard.astro`):**
+    Change the main wrapper link.
+    ```html
+    <a href={data.link} ... data-cursor="CASE STUDY">
+      <!-- content -->
+    </a>
+    ```
+
+---
+
+### **Verification**
+
+1.  Run `npm run dev`.
+2.  Move your mouse. You should see a precision crosshair following you. It should invert colors (white on black, black on white).
+3.  Hover over a Project Card. The crosshair should vanish, and a box saying **[ CASE STUDY ]** should pop up.
+
+This is the **Contextual HUD**. It turns navigation into information.
+
+**Skill 04 is complete.**
+
+### **Skill 05: Execution Plan**
+
+#### **Step 1: Define the X-Ray Styles (`src/styles/global.css`)**
+
+We need a CSS class that, when applied to the body, draws a border around *everything*.
+
+**Action:** Open `src/styles/global.css` and add this code to the bottom.
+
+```css
+/* src/styles/global.css */
+
+/* ... existing styles ... */
+
+/* --- X-RAY MODE (Debug) --- */
+body.debug-mode * {
+  /* 1. Outline everything in OrangeRed */
+  outline: 1px solid theme('colors.accent') !important;
+  
+  /* 2. Add a subtle tint to visualize spacing */
+  background-color: rgba(255, 69, 0, 0.05) !important;
+  
+  /* 3. Ensure outlines don't break layout */
+  outline-offset: -1px;
+}
+
+/* Optional: Hide specific elements in debug mode if they get in the way */
+body.debug-mode #generative-substrate {
+  opacity: 0.1;
+}
+```
+
+---
+
+#### **Step 2: Create the Toggle Component (`src/components/ui/DebugToggle.astro`)**
+
+We will create a small, discreet button.
+
+1.  Create a file: `src/components/ui/DebugToggle.astro`
+2.  Paste this code:
+
+```astro
+---
+// src/components/ui/DebugToggle.astro
+---
+
+<button 
+  id="debug-toggle" 
+  class="font-mono text-[10px] uppercase tracking-widest text-muted hover:text-accent transition-colors duration-300"
+  data-cursor="TOGGLE X-RAY"
+>
+  [ DEBUG: OFF ]
+</button>
+
+<script>
+  // Runs on every page navigation
+  document.addEventListener('astro:page-load', () => {
+    const btn = document.getElementById('debug-toggle');
+    const body = document.body;
+
+    // Check if debug mode was left on (persistence)
+    const isDebug = localStorage.getItem('tmm-debug-mode') === 'true';
+    if (isDebug) {
+      body.classList.add('debug-mode');
+      if (btn) btn.innerText = '[ DEBUG: ON ]';
+    }
+
+    if (btn) {
+      btn.addEventListener('click', () => {
+        body.classList.toggle('debug-mode');
+        
+        const active = body.classList.contains('debug-mode');
+        btn.innerText = active ? '[ DEBUG: ON ]' : '[ DEBUG: OFF ]';
+        
+        // Save preference
+        localStorage.setItem('tmm-debug-mode', active.toString());
+      });
+    }
+  });
+</script>
+```
+
+---
+
+#### **Step 3: Place it in the Footer (`src/components/Footer.astro`)**
+
+We will place this toggle in the footer, balancing the layout.
+
+**Action:** Open `src/components/Footer.astro`.
+
+**Update the Left Side of the Footer:**
+
+```astro
+---
+// src/components/Footer.astro
+import DebugToggle from './ui/DebugToggle.astro'; // Import it
+const year = new Date().getFullYear();
+---
+
+<footer class="py-12 border-t border-muted/20 mt-20">
+  <div class="flex flex-col md:flex-row justify-between items-end gap-8">
+    
+    <!-- Left: Metadata + Debug Toggle -->
+    <div class="hidden md:flex flex-col gap-4 font-mono text-xs text-muted/50">
+      <span>JHB / ZA — {year}</span>
+      <DebugToggle /> <!-- Mount the component here -->
+    </div>
+
+    <!-- Right: The Active Call to Action (Existing Code) -->
+    <!-- ... -->
+
+  </div>
+</footer>
+```
+
+---
+
+### **Verification**
+
+1.  Run `npm run dev`.
+2.  Scroll to the very bottom of the page.
+3.  Locate the small text: `[ DEBUG: OFF ]`.
+4.  **Click it.**
+5.  **The Result:** The entire site should light up with OrangeRed outlines. You will see every bounding box, every grid gap, and every container. It exposes the architecture of your build.
+6.  Click it again to turn it off.
+
+---
+
+### **Mission Complete**

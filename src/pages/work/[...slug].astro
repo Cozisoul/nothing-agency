@@ -1,0 +1,81 @@
+---
+import { getCollection } from "astro:content";
+import CaseStudyLayout from "../../layouts/CaseStudyLayout.astro";
+
+// 1. Generate Static Paths for all projects
+export async function getStaticPaths() {
+  const projects = await getCollection("projects");
+  return projects.map((entry) => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await entry.render();
+const { title, client, year, services, blocks } = entry.data;
+---
+
+<CaseStudyLayout title={title} client={client} year={year} services={services}>
+  <!-- 2. The Render Strategy -->
+  <!-- We mix standard Markdown content with our Custom Blocks -->
+
+  <div class="max-w-[1800px] mx-auto">
+    <!-- A. The Intro Text (Standard Markdown) -->
+    <div
+      class="px-[var(--layout-gap)] py-32 md:w-2/3 ml-auto font-sys text-fluid-body leading-relaxed text-muted"
+    >
+      <Content />
+    </div>
+
+    <!-- B. The Modular Blocks -->
+    {
+      blocks &&
+        blocks.map((block) => (
+          <div class="w-full my-20">
+            {/* BLOCK: FULL IMAGE */}
+            {block.type === "full-image" && (
+              <div class="w-full px-[var(--layout-gap)]">
+                <div class="relative w-full aspect-video overflow-hidden bg-bg-light">
+                  <img
+                    src={block.src}
+                    alt={block.alt || ""}
+                    class="w-full h-full object-cover"
+                  />
+                </div>
+                {block.caption && (
+                  <p class="font-mono text-xs text-muted mt-4 uppercase tracking-widest text-center">
+                    * {block.caption}
+                  </p>
+                )}
+              </div>
+            )}
+
+            {/* BLOCK: TWO COLUMN TEXT */}
+            {block.type === "two-column" && (
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-[var(--layout-gap)] px-[var(--layout-gap)]">
+                <div class="font-sys text-lg text-fg border-t border-accent pt-4">
+                  {block.left}
+                </div>
+                <div class="font-mono text-sm text-muted border-t border-muted/50 pt-4">
+                  {block.right}
+                </div>
+              </div>
+            )}
+
+            {/* BLOCK: CODE SNIPPET (The Systematic) */}
+            {block.type === "code" && (
+              <div class="px-[var(--layout-gap)] md:w-2/3">
+                <div class="bg-bg-light p-8 border border-muted/20 font-mono text-xs text-muted overflow-x-auto">
+                  {block.filename && (
+                    <div class="mb-4 text-accent">// {block.filename}</div>
+                  )}
+                  <pre class="whitespace-pre-wrap">{block.code}</pre>
+                </div>
+              </div>
+            )}
+          </div>
+        ))
+    }
+  </div>
+</CaseStudyLayout>

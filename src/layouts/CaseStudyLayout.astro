@@ -1,0 +1,85 @@
+---
+import MainLayout from "./MainLayout.astro";
+
+interface Props {
+  title: string;
+  client?: string;
+  year?: string;
+  services?: string[];
+}
+
+const {
+  title,
+  client = "Internal Mockup",
+  year = "2025",
+  services = [],
+} = Astro.props;
+---
+
+<MainLayout title={`* ${title}`} description={`Case Study: ${client}`}>
+  <article class="min-h-screen pb-40">
+    <!-- HEADER / HERO -->
+    <!-- Full screen immersive with kinetic type -->
+    <header
+      class="relative w-full h-[80vh] flex flex-col justify-end p-[var(--layout-gap)] border-b border-muted/20"
+    >
+      <div class="absolute inset-0 z-[-1] opacity-30">
+        <!-- Optional Background Image Slot here if needed, but we keep it minimal -->
+      </div>
+
+      <div class="w-full flex flex-col md:flex-row justify-between items-end">
+        <h1
+          class="font-sys text-fluid-h1 font-bold leading-[0.85] tracking-tight kinetic-text origin-left will-change-transform"
+          transition:name={`hero-title-${title}`}
+        >
+          {title}
+        </h1>
+
+        <div
+          class="hidden md:flex flex-col text-right font-mono text-xs uppercase tracking-widest text-muted"
+        >
+          <span class="text-accent">* CASE STUDY</span>
+          <span>ID: {title.substring(0, 3).toUpperCase()}-{year}</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- METADATA BAR -->
+    <section
+      class="sticky top-0 z-30 bg-bg/80 backdrop-blur-md border-b border-muted/20 py-4 px-[var(--layout-gap)]"
+    >
+      <div
+        class="grid grid-cols-2 md:grid-cols-4 gap-4 font-mono text-xs uppercase tracking-widest"
+      >
+        <div>
+          <span class="text-muted block mb-1">Client</span>
+          <span class="text-fg">{client}</span>
+        </div>
+        <div>
+          <span class="text-muted block mb-1">Year</span>
+          <span class="text-fg">{year}</span>
+        </div>
+        <div class="col-span-2 md:col-span-2">
+          <span class="text-muted block mb-1">Services</span>
+          <span class="text-fg">{services.join(" / ")}</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTENT SLOTS -->
+    <!-- This is where the markdown or blocks go -->
+    <div class="w-full">
+      <slot />
+    </div>
+
+    <!-- NEXT PROJECT NAV (Simple placeholder for now) -->
+    <div class="mt-40 px-[var(--layout-gap)] text-center">
+      <a
+        href="/"
+        class="font-sys text-fluid-h2 font-bold hover:text-accent transition-colors duration-300"
+      >
+        [ RETURN TO INDEX ]
+      </a>
+    </div>
+  </article>
+</MainLayout>

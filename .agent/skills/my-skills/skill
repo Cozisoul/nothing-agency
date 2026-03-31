@@ -1,0 +1,415 @@
+
+# TMM-OS / Agency: Upgrade Documentation
+**Project:** `*nothing...` v2.0
+**Target Architecture:** Generative, Kinetic, Data-Driven
+**Base Framework:** Astro + TypeScript + Tailwind
+
+---
+
+## 00. Core Dependencies & Environment
+
+Before implementing specific skills, the environment must be primed with the necessary physics and animation engines.
+
+### **Skill: Physics Engine Injection**
+**Description:** Installs the core libraries required for kinetic motion, smooth scrolling, and generative rendering.
+
+**Implementation:**
+```bash
+npm install gsap @studio-freight/lenis p5
+```
+
+**Configuration (`src/utils/physics.ts`):**
+*   **Lenis:** Must be configured for `lerp: 0.1` (Heavy Weight).
+*   **GSAP:** Register `ScrollTrigger` plugin for velocity-based effects.
+
+---
+
+## 01. Skill: The Generative Substrate (Background)
+
+**Description:**
+Replaces the static noise overlay with a live, computational canvas. This layer renders a generative grid or network that reacts to cursor proximity and scroll depth, creating a sense of a "living system."
+
+**Context:**
+Inspired by *And Repeat*. The brand is not a logo; it is an algorithm.
+
+**File Strategy:**
+*   **Component:** `src/components/system/GenerativeCanvas.astro`
+*   **Script:** `src/scripts/sketches/grid-distortion.js`
+
+**Implementation Logic:**
+1.  **P5 Instance Mode:** Use p5.js in "instance mode" to prevent global namespace pollution.
+2.  **Z-Indexing:** Place canvas at `z-index: -1`.
+3.  **The Algorithm:**
+    *   Draw a uniform grid of points (Systematic).
+    *   Calculate distance from mouse cursor to each point.
+    *   Displace points based on proximity (Poetic).
+4.  **Performance:** Canvas must resize dynamically with the window.
+
+**Code Pattern:**
+```javascript
+// Sketch Logic
+const sketch = (p) => {
+  p.setup = () => {
+    p.createCanvas(window.innerWidth, window.innerHeight);
+    p.noFill();
+    p.stroke(80); // Muted Grey
+  };
+  
+  p.draw = () => {
+    p.clear();
+    // Grid Logic Here...
+  };
+};
+```
+
+---
+
+## 02. Skill: Kinetic Typography (Velocity)
+
+**Description:**
+Text should not be static. Headlines and manifestos should react to the physics of the user's scroll. When the user scrolls fast, the text should skew or drift, visualizing the momentum.
+
+**Context:**
+Inspired by *DIA Studio*. Typography acts as a physical material subject to inertia.
+
+**File Strategy:**
+*   **Target Elements:** Any element with class `.kinetic-text`.
+*   **Hook:** `src/hooks/useVelocity.ts`
+
+**Implementation Logic:**
+1.  **Lenis Listener:** Hook into the Lenis `on('scroll')` event to capture current velocity.
+2.  **GSAP Setter:** Use `gsap.quickSetter` for high-performance updates.
+3.  **The Math:** Map scroll velocity (e.g., 0 to 50) to a Skew Y value (e.g., 0deg to 10deg).
+4.  **Relaxation:** When scrolling stops, the text must elastically snap back to 0.
+
+**Code Pattern:**
+```typescript
+// Inside MainLayout script
+lenis.on(({ velocity }) => {
+  const skewAmount = velocity * 0.25; // Dampening factor
+  gsap.to('.kinetic-text', { 
+    skewY: skewAmount, 
+    overwrite: true,
+    ease: "power3.out"
+  });
+});
+```
+
+---
+
+## 03. Skill: The Data Index (Visual/List Toggle)
+
+**Description:**
+Provides a dual-view system for the "Work" section. Users can toggle between "Visual Mode" (The Poetic: Big Images) and "Index Mode" (The Systematic: Raw Data Table).
+
+**Context:**
+This proves the agency is rooted in Data Science. It exposes the database structure behind the beauty.
+
+**File Strategy:**
+*   **Component:** `src/components/work/WorkFeed.jsx` (React Component required for state).
+*   **State:** `viewMode: 'grid' | 'table'`.
+
+**Implementation Logic:**
+1.  **The Switch:** A UI toggle in the section header: `[ VISUAL ] / [ INDEX ]`.
+2.  **Grid View:** Renders the existing `ProjectCard.astro` layout.
+3.  **Table View:** Renders a dense table:
+    *   Headers: `ID`, `CLIENT`, `YEAR`, `SERVICES`, `STACK`.
+    *   Rows: Monospace font, `border-bottom`, highlighted on hover.
+4.  **Transition:** Use `AutoAnimate` or simple CSS conditional rendering for instant switching.
+
+---
+
+## 04. Skill: The Contextual HUD (Cursor)
+
+**Description:**
+Replaces the system pointer with a custom Heads-Up Display (HUD). The cursor carries information. It changes state based on what it is hovering over.
+
+**Context:**
+The interface is a tool. The cursor is the user's instrument.
+
+**File Strategy:**
+*   **Component:** `src/components/ui/CursorHUD.astro`
+*   **Global Script:** `src/scripts/cursor.js`
+
+**Implementation Logic:**
+1.  **The Element:** A fixed `div` following mouse coordinates (lagged slightly via GSAP for weight).
+2.  **Default State:** A small crosshair `+` or dot.
+3.  **Data Attributes:** Look for elements with `data-cursor="label"`.
+    *   *Example:* Hovering a project image -> `data-cursor="VIEW CASE"`.
+    *   *Example:* Hovering the email -> `data-cursor="COPY"`.
+4.  **State Change:** When hovering a target, expand the cursor `div` and inject the text from the data attribute. Mix-blend-mode `difference` ensures visibility on all backgrounds.
+
+---
+
+## 05. Skill: X-Ray Mode (Debug View)
+
+**Description:**
+A "Radical Transparency" feature. A button in the footer that reveals the underlying grid, padding, and component boundaries of the website.
+
+**Context:**
+Proves technical mastery. "We have nothing to hide. Look at our code."
+
+**File Strategy:**
+*   **Global CSS Class:** `.debug-mode`
+
+**Implementation Logic:**
+1.  **The Toggle:** A button in the footer `[ DEBUG: OFF ]`.
+2.  **The CSS Injection:** When clicked, toggle the `.debug-mode` class on the `<body>`.
+3.  **The Styles:**
+    ```css
+    body.debug-mode * {
+      outline: 1px solid var(--color-accent) !important;
+      background: rgba(255, 69, 0, 0.05) !important; /* OrangeRed Tint */
+    }
+    body.debug-mode .grid-lines {
+      opacity: 1 !important;
+    }
+    ```
+4.  **Meta Data:** Reveal hidden `<span>` tags that display screen width, current scroll position, and component names.
+
+---
+
+## 06. Skill: Seamless View Transitions
+
+**Description:**
+When a user clicks a project in the "Index" or "Grid," the browser does not hard refresh. The thumbnail morphs into the hero image of the Case Study page.
+
+**Context:**
+Creates an "App-like" feel. Continuous, unbroken immersion.
+
+**File Strategy:**
+*   **Astro Config:** Ensure `<ViewTransitions />` is imported in `MainLayout.astro`.
+
+**Implementation Logic:**
+1.  **Transition Names:** Assign unique `transition:name` CSS properties to connecting elements.
+    *   Home Page Card: `transition:name="hero-image-project-1"`
+    *   Case Study Page Hero: `transition:name="hero-image-project-1"`
+2.  **Persistence:** Ensure the `Header` and `GenerativeCanvas` have `transition:persist`. They should not reload; they should stay constant while the content changes underneath.
+
+---
+
+### **Execution Order**
+
+1.  **Install Dependencies** (Physics Engine).
+2.  **Build Skill 04 (Cursor)** first, as it affects global UX.
+3.  **Build Skill 02 (Kinetic Type)** to set the motion language.
+4.  **Build Skill 03 (Data Index)** to expand the content presentation.
+5.  **Build Skill 01 (Generative Canvas)** to set the atmosphere.
+6.  **Build Skill 05 (X-Ray)** as the final "easter egg."
+7.  **Refine Skill 06 (Transitions)** during the final polish.
+
+## 07. Skill: The Modular Case Study (The Narrative)
+
+**Description:**
+A flexible, block-based templating system for individual project pages (e.g., `/work/research-radio`). The "And Repeat" aesthetic requires that case studies are not just text and images, but mixed-media scrolls.
+
+**Context:**
+The homepage is the menu; the Case Study is the meal. This is where you prove your value.
+
+**File Strategy:**
+*   **Layout:** `src/layouts/CaseStudyLayout.astro`
+*   **Content Schema:** Update `src/content/config.ts` to support "blocks" (e.g., `FullWidthImage`, `TwoColumnText`, `VideoLoop`, `CodeSnippet`).
+
+**Implementation Logic:**
+1.  **The Hero:** Full-screen immersive media (Video/Image) with the Title overlaid in huge, kinetic type.
+2.  **The Meta Data:** A sticky sidebar or bar containing: `Client`, `Year`, `Services`, `Stack`.
+3.  **The Blocks:**
+    *   **The "Deconstruct" Block:** A specialized component that shows the wireframe overlaying the final design (using a slider).
+    *   **The "Code" Block:** A syntax-highlighted code snippet showing the "Systematic" logic behind the design.
+    *   **The "Palette" Block:** A dynamic rendering of the project's color tokens.
+4.  **Next Project:** A footer navigation that seamlessly flows into the next case study (using View Transitions).
+
+---
+
+## 08. Skill: Responsive Adaptation (Mobile Logic)
+
+**Description:**
+High-end interaction designs (custom cursors, hover effects, kinetic type) often break or feel clunky on touch screens. We need a specific "Touch Mode" logic.
+
+**Context:**
+"Systematic" means it works everywhere. "Poetic" means it respects the device.
+
+**Implementation Logic:**
+1.  **Kill the Cursor:** The Custom HUD (Skill 04) must be disabled on touch devices (`@media (hover: none)`).
+2.  **Simplify Kinetics:** The Kinetic Typography (Skill 02) velocity skew should be reduced or disabled on mobile to prevent motion sickness during fast thumb-scrolling.
+3.  **The Stack:** The "Index/Table View" (Skill 03) doesn't work on mobile. On mobile, force the "Visual/Grid" view, but stack it vertically.
+4.  **Navigation:** Move the Header links to a bottom-sheet overlay or a minimal "Hamburger" menu for mobile to preserve screen real estate.
+
+---
+
+## 09. Skill: The "Lost" Page (404)
+
+**Description:**
+A creative, on-brand error page. Standard 404 pages break immersion.
+
+**Context:**
+Even errors are part of the System.
+
+**Implementation Logic:**
+1.  **The Concept:** A "System Failure" or "Void" aesthetic.
+2.  **Visual:** The Generative Canvas (Skill 01) goes chaotic or static/glitchy.
+3.  **Text:** "DATA NOT FOUND. RETURNING TO ORIGIN..."
+4.  **Action:** A countdown timer (e.g., 5 seconds) that automatically redirects the user back to the Homepage.
+
+---
+
+### **The Definitive Completion Checklist**
+
+Now you have the full picture.
+
+1.  **Environment:** Physics Engine installed.
+2.  **Atmosphere:** Generative Canvas (Background).
+3.  **Motion:** Kinetic Typography (Velocity).
+4.  **Navigation:** Data Index (Grid/Table Toggle).
+5.  **Interaction:** Contextual HUD (Cursor).
+6.  **Transparency:** X-Ray Mode (Debug).
+7.  **Flow:** Seamless View Transitions.
+8.  **Depth:** Modular Case Studies (The Content). **(NEW)**
+9.  **Accessibility:** Mobile/Touch Strategy. **(NEW)**
+10. **Resilience:** Custom 404. **(NEW)**
+
+Skill 00: Execution Plan
+Step 1: Install The Physics Engine
+Open your terminal in the nothing-agency project root and run this command to install the animation and scrolling libraries.
+code
+Bash
+npm install gsap @studio-freight/lenis
+Step 2: Configure The Visual System (tailwind.config.mjs)
+We need to hard-code your Brand Identity into the CSS engine. This ensures that every time we use bg-bg or text-accent, it is the exact hexadecimal value from your brand guide.
+Action: Open tailwind.config.mjs and replace the content with this definitive configuration:
+code
+JavaScript
+/** @type {import('tailwindcss').Config} */
+export default {
+	content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
+	theme: {
+		extend: {
+			colors: {
+				// TMM-OS Definitive Palette
+				bg: '#111111',       // System Black
+				fg: '#FFF8E7',       // Cosmic Latte
+				accent: '#FF4500',   // OrangeRed (The "Poetic" Spark)
+				muted: '#888888',    // Structural Grey
+				'bg-light': '#1A1A1A', // Secondary Surface
+			},
+			fontFamily: {
+				// The "Office" Voice
+				sys: ['"Helvetica Neue"', 'Helvetica', 'Arial', 'sans-serif'],
+				// The "Annotation" Voice
+				mono: ['Menlo', 'Courier New', 'monospace'],
+			},
+			fontSize: {
+				// Fluid Typography (Clamps for perfect scaling)
+				'fluid-h1': 'clamp(3rem, 6vw, 6rem)',
+				'fluid-h2': 'clamp(1.5rem, 3vw, 3rem)',
+				'fluid-body': 'clamp(1rem, 1.1vw, 1.25rem)',
+				'fluid-sm': 'clamp(0.75rem, 0.9vw, 0.875rem)',
+			},
+			spacing: {
+				// The Systematic Grid Gaps
+				'layout-gap': 'clamp(1rem, 4vw, 3rem)',
+			},
+			transitionTimingFunction: {
+				// The "Heavy" Ease (for that premium feel)
+				'heavy': 'cubic-bezier(0.25, 1, 0.5, 1)',
+			}
+		},
+	},
+	plugins: [],
+}
+Step 3: Initialize The Physics (src/utils/physics.ts)
+We need a central utility to manage the scrolling. We don't want to write this code in every component. We write it once, here.
+Action:
+Create a folder: src/utils
+Create a file: src/utils/physics.ts
+Paste this code:
+code
+TypeScript
+import Lenis from '@studio-freight/lenis';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+// Register GSAP plugins globally
+gsap.registerPlugin(ScrollTrigger);
+
+let lenis: Lenis | null = null;
+
+export const initPhysics = () => {
+  // 1. Initialize Lenis (The Smooth Scroll)
+  lenis = new Lenis({
+    duration: 1.2, // The "Weight" of the scroll
+    easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Exponential ease
+    direction: 'vertical',
+    gestureDirection: 'vertical',
+    smooth: true,
+    mouseMultiplier: 1,
+    smoothTouch: false,
+    touchMultiplier: 2,
+  });
+
+  // 2. Connect Lenis to GSAP
+  // This ensures animations sync perfectly with the smooth scroll
+  lenis.on('scroll', ScrollTrigger.update);
+
+  gsap.ticker.add((time) => {
+    lenis?.raf(time * 1000);
+  });
+
+  gsap.ticker.lagSmoothing(0);
+
+  return lenis;
+};
+
+export const getLenis = () => lenis;
+Step 4: Wire the Engine (src/layouts/MainLayout.astro)
+Now we hook this utility into your Master Layout so it runs on every page.
+Action: Open src/layouts/MainLayout.astro and update the <script> section at the bottom.
+code
+Astro
+---
+import '../styles/global.css';
+import { ViewTransitions } from 'astro:transitions';
+
+interface Props {
+	title: string;
+	description?: string;
+}
+
+const { 
+  title, 
+  description = "A transdisciplinary office merging systematic rigor with poetic inquiry." 
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="en" class="bg-bg text-fg antialiased selection:bg-accent selection:text-bg">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="description" content={description} />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="generator" content={Astro.generator} />
+		<title>{title}</title>
+        <!-- Enable seamless page morphing -->
+        <ViewTransitions />
+	</head>
+	<body class="font-sys relative min-h-screen overflow-x-hidden">
+        
+        <slot />
+
+        <script>
+            import { initPhysics } from '../utils/physics';
+
+            // Run on initial load
+            initPhysics();
+
+            // Re-run on View Transition navigation (Critical for Astro)
+            document.addEventListener('astro:page-load', () => {
+                // Any page-specific re-initialization goes here if needed
+                console.log("System Ready: Physics Engine Active");
+            });
+        </script>
+	</body>
+</html>
+
+

@@ -1,71 +1,46 @@
-# *nothing...* Agency Website v1.0
+# Astro Starter Kit: Basics
 
-This repository contains the source code for the official website of the `*nothing...` agency. The site is a single-page, award-ready web application built with a philosophy of "Systematic-Poetic" and "Digital Brutalism."
+```sh
+npm create astro@latest -- --template basics
+```
 
-**Live Site:** [https://nothing-agency.com](https://nothing-agency.com) *(Update this once deployed)*
+> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
 
----
+## 🚀 Project Structure
 
-## Technical Stack
+Inside of your Astro project, you'll see the following folders and files:
 
-*   **Core:** Vanilla HTML, CSS, and JavaScript (ES Modules)
-*   **Build Tool:** [Vite](https://vitejs.dev/) for a fast development server and optimized production builds.
-*   **Styling:** [PostCSS](https://postcss.org/) with `autoprefixer` and `cssnano` for browser compatibility and minification.
-*   **Linting:** [ESLint](https://eslint.org/) for JavaScript and [Stylelint](https://stylelint.io/) for CSS to ensure code quality and consistency.
-*   **Deployment:** Hosted on [GitHub Pages](https://pages.github.com/) (or Netlify/Vercel).
+```text
+/
+├── public/
+│   └── favicon.svg
+├── src
+│   ├── assets
+│   │   └── astro.svg
+│   ├── components
+│   │   └── Welcome.astro
+│   ├── layouts
+│   │   └── Layout.astro
+│   └── pages
+│       └── index.astro
+└── package.json
+```
 
----
+To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
 
-## 🚀 Getting Started
+## 🧞 Commands
 
-### Prerequisites
+All commands are run from the root of the project, from a terminal:
 
-*   Node.js (v18 or higher)
-*   npm (or your preferred package manager)
+| Command                   | Action                                           |
+| :------------------------ | :----------------------------------------------- |
+| `npm install`             | Installs dependencies                            |
+| `npm run dev`             | Starts local dev server at `localhost:4321`      |
+| `npm run build`           | Build your production site to `./dist/`          |
+| `npm run preview`         | Preview your build locally, before deploying     |
+| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
+| `npm run astro -- --help` | Get help using the Astro CLI                     |
 
-### Local Development
+## 👀 Want to learn more?
 
-1.  **Clone the repository:**
-    ```bash
-    git clone https://github.com/YourUsername/nothing-agency.git
-    cd nothing-agency
-    ```
-
-2.  **Install dependencies:**
-    ```bash
-    npm install
-    ```
-
-3.  **Run the development server:**
-    ```bash
-    npm run dev
-    ```
-    This will start a hot-reloading server, typically at `http://localhost:5173`.
-
----
-
-## 📦 Build & Deployment
-
-*   **To run code quality checks:**
-    ```bash
-    npm run lint
-    ```
-
-*   **To build the optimized, production-ready site:**
-    ```bash
-    npm run build
-    ```
-    This will generate a `dist/` folder in the project root. This is the only folder that should ever be deployed.
-
-*   **To preview the production build locally:**
-    ```bash
-    npm run preview
-    ```
-
----
-
-## 📄 License
-
-This project is licensed under the MIT License. See the `LICENSE` file for details.
-
-© 2025 *nothing...*
+Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).

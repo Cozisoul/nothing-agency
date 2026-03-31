@@ -1,0 +1,139 @@
+---
+// src/components/EntryGate.astro
+---
+
+<div
+  id="entry-gate"
+  class="fixed inset-0 z-[100] bg-bg flex items-center justify-center cursor-pointer"
+>
+  <div class="relative overflow-hidden">
+    <h1 class="font-poetic text-fluid-h1 text-fg selection:bg-transparent">
+      *nothing...<span id="cursor" class="text-accent">_</span>
+    </h1>
+
+    <!-- The "Curtain" effect div -->
+    <div
+      id="curtain"
+      class="absolute inset-0 bg-accent transform translate-y-full"
+    >
+    </div>
+  </div>
+
+  <div
+    class="absolute bottom-8 left-1/2 -translate-x-1/2 text-muted font-mono text-sm tracking-widest uppercase animate-pulse"
+  >
+    [ Press Any Key ]
+  </div>
+</div>
+
+<script>
+  // We use standard DOM manipulation here because it's the most performant way
+  // to handle this critical first interaction.
+
+  const gate = document.getElementById("entry-gate");
+  const cursor = document.getElementById("cursor");
+  const prompt = document.querySelector(".animate-pulse");
+
+  let isUnlocked = false;
+
+  // Glitch Effect Logic for Cursor
+  if (cursor) {
+    // Shape Shifting (Underscore vs Box)
+    // Randomly switch to a box cursor for a short burst
+    setInterval(() => {
+      if (Math.random() > 0.7) {
+        // 30% chance
+        cursor.classList.add("is-box");
+        setTimeout(
+          () => {
+            cursor.classList.remove("is-box");
+          },
+          100 + Math.random() * 200
+        ); // Short burst (100-300ms)
+      }
+    }, 800);
+  }
+
+  function unlock() {
+    if (isUnlocked) return;
+    isUnlocked = true;
+
+    // 2. Visual Logic
+    if (cursor) {
+      cursor.style.animation = "none";
+      cursor.style.opacity = "1";
+      cursor.classList.remove("is-box"); // Reset to normal
+    }
+    if (prompt) prompt.classList.add("opacity-0"); // Hide prompt
+
+    // 3. The Animation Sequence
+    // We slide the gate up like a heavy blast door
+    if (gate) {
+      gate.style.transition = "transform 1.2s cubic-bezier(0.87, 0, 0.13, 1)";
+      gate.style.transform = "translateY(-100%)";
+
+      // Cleanup after animation to free memory
+      setTimeout(() => {
+        gate.style.display = "none";
+      }, 1200);
+    }
+
+    // 4. Dispatch event so other components know the site is open
+    window.dispatchEvent(new CustomEvent("site-unlocked"));
+  }
+
+  // Listeners
+  window.addEventListener("keydown", unlock);
+  window.addEventListener("click", unlock);
+  window.addEventListener("touchstart", unlock);
+</script>
+
+<style>
+  /* Base Cursor (Underscore) */
+  #cursor {
+    display: inline-block;
+    animation: blink-color 2s steps(1) infinite;
+  }
+
+  /* Box Cursor State */
+  #cursor.is-box {
+    background-color: currentColor;
+    color: transparent; /* Hide the underscore */
+    width: 0.6em;
+    height: 1em;
+    vertical-align: text-bottom;
+    transform: translateY(0.1em); /* visual adjustment */
+  }
+
+  /* 
+     Color Cycle: 
+     0-33%: Accent (OrangeRed)
+     33-66%: Blue
+     66-100%: Yellow
+     Combined with Blink (Opacity)
+  */
+  @keyframes blink-color {
+    0%,
+    100% {
+      opacity: 1;
+      color: var(--color-accent);
+    }
+    16.6% {
+      opacity: 0;
+    }
+    33.3% {
+      opacity: 1;
+      color: #0000ff; /* Digital Blue */
+    }
+    50% {
+      opacity: 0;
+    }
+    66.6% {
+      opacity: 1;
+      color: #ffff00; /* Digital Yellow */
+    }
+    83.3% {
+      opacity: 0;
+    }
+  }
+</style>

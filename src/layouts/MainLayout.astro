@@ -1,0 +1,75 @@
+---
+// src/layouts/MainLayout.astro
+import "../styles/global.css";
+import { ViewTransitions } from "astro:transitions";
+import GenerativeCanvas from "../components/system/GenerativeCanvas.astro";
+import CursorHUD from "../components/ui/CursorHUD.astro";
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const {
+  title,
+  description = "A transdisciplinary office merging systematic rigor with poetic inquiry.",
+} = Astro.props;
+---
+
+<!doctype html>
+<html
+  lang="en"
+  class="bg-bg text-fg antialiased selection:bg-accent selection:text-bg"
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="description" content={description} />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <!-- Google Fonts: JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap"
+      rel="stylesheet"
+    />
+    <ViewTransitions />
+  </head>
+  <body class="font-sys relative min-h-screen overflow-x-hidden">
+    <!-- 1. The Generative Substrate (Living Grid) -->
+    <GenerativeCanvas />
+
+    <!-- 2. The Noise Overlay (The Poetic Texture) -->
+    <!-- A fixed, pointer-events-none layer that adds film grain -->
+    <div
+      class="fixed inset-0 z-50 pointer-events-none opacity-[0.04] mix-blend-overlay"
+      style="background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E');"
+    >
+    </div>
+
+    <!-- 3. The Contextual HUD -->
+    <CursorHUD />
+
+    <!-- MAIN CONTENT SLOT -->
+    <slot />
+
+    <!-- LENIS SMOOTH SCROLL INITIALIZATION -->
+    <script>
+      import { initPhysics } from "../utils/physics";
+      import { initKineticType } from "../scripts/kinetic";
+
+      // Run on initial load
+      initPhysics();
+      initKineticType();
+
+      // Re-run on View Transition navigation (Critical for Astro)
+      document.addEventListener("astro:page-load", () => {
+        // Any page-specific re-initialization goes here if needed
+        initKineticType();
+        console.log("System Ready: Physics Engine Active");
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,95 @@
+---
+// src/components/ui/CursorHUD.astro
+---
+
+<!-- The HUD Container -->
+<div
+  id="cursor-hud"
+  class="fixed top-0 left-0 z-[9999] pointer-events-none hidden md:flex items-center justify-center mix-blend-difference"
+>
+  <!-- The Crosshair (Default) -->
+  <div
+    id="cursor-crosshair"
+    class="w-4 h-4 relative flex items-center justify-center transition-opacity duration-300"
+  >
+    <div class="absolute w-[1px] h-full bg-fg"></div>
+    <div class="absolute h-[1px] w-full bg-fg"></div>
+  </div>
+
+  <!-- The Label (Active State) -->
+  <div
+    id="cursor-label"
+    class="absolute bg-fg text-bg font-mono text-[10px] uppercase tracking-widest px-2 py-1 opacity-0 scale-90 transition-all duration-300"
+  >
+    <span id="cursor-text">VIEW</span>
+  </div>
+</div>
+
+<script>
+  import { gsap } from "gsap";
+
+  // Run on every page navigation (Astro View Transitions)
+  document.addEventListener("astro:page-load", () => {
+    const hud = document.getElementById("cursor-hud");
+    const label = document.getElementById("cursor-label");
+    const textSpan = document.getElementById("cursor-text");
+    const crosshair = document.getElementById("cursor-crosshair");
+
+    // If we are on mobile, abort (CSS hides it, but let's save JS cycles)
+    if (!hud || window.matchMedia("(pointer: coarse)").matches) return;
+
+    // 1. Setup Physics (GSAP QuickSetter for performance)
+    // We center the HUD on the mouse coordinates
+    const setX = gsap.quickSetter(hud, "x", "px");
+    const setY = gsap.quickSetter(hud, "y", "px");
+
+    // 2. Mouse Movement Logic
+    window.addEventListener("mousemove", (e) => {
+      // Direct mapping for instant response (Systematic)
+      // Or add a slight delay in GSAP for "weight" (Poetic)
+      setX(e.clientX);
+      setY(e.clientY);
+    });
+
+    // 3. Interaction Logic (Hovering)
+    // We scan the document for interactive elements
+    const interactiveElements = document.querySelectorAll(
+      "a, button, [data-cursor]",
+    );
+
+    interactiveElements.forEach((el) => {
+      // MOUSE ENTER
+      el.addEventListener("mouseenter", () => {
+        const customLabel = el.getAttribute("data-cursor");
+
+        // Change text if data-attribute exists, otherwise default to "OPEN"
+        if (textSpan) textSpan.innerText = customLabel || "OPEN";
+
+        // Animate State Change
+        gsap.to(crosshair, { opacity: 0, duration: 0.2 }); // Hide Crosshair
+        gsap.to(label, {
+          opacity: 1,
+          scale: 1,
+          duration: 0.3,
+          ease: "power2.out",
+        }); // Show Label
+      });
+
+      // MOUSE LEAVE
+      el.addEventListener("mouseleave", () => {
+        // Revert State
+        gsap.to(crosshair, { opacity: 1, duration: 0.2 });
+        gsap.to(label, { opacity: 0, scale: 0.9, duration: 0.2 });
+      });
+    });
+  });
+</script>
+
+<style>
+  /* Ensure it sits on top of everything but doesn't block clicks */
+  #cursor-hud {
+    transform: translate(-50%, -50%); /* Centers the div on the coordinate */
+    /* mix-blend-mode difference makes it visible on white OR black backgrounds */
+    mix-blend-mode: difference;
+  }
+</style>
